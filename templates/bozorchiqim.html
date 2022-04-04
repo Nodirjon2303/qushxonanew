@@ -1,0 +1,172 @@
+{% extends 'bozorbase.html' %}
+{% block content %}
+<!-- 
+    Jami qolgan soni : {{ bazadaqolganson }}
+    Jami kg: {{ qolganogirlik }}
+ -->
+
+
+
+    <div class="limiter">
+       
+        <div class="container-table100">
+            <div class="wrap-table100">
+    <div style="color: rgb(11, 202, 37);">
+                Jami qolgan soni : {{ bazadaqolganson }}    <br>
+                Jami kg: {{ qolganogirlik }}
+            </div>
+            
+                <div class="table100 ver1 m-b-110">
+                    <div class=" table100-head">
+                        <table >
+                            <thead>
+                                <tr class="row100 head">
+                                    <th class="cell100 column1">№</th>
+                                    <th class="cell100 column1">Sotuvchi</th>
+                                    <th class="cell100 column1">Mahsulot</th>
+                                    <th class="cell100 column1">Og'irligi</th>
+                                    <th class="cell100 column1">Narxi</th>
+                                    <th class="cell100 column1">To'lov</th>
+                                    <th class="cell100 column1">Soni</th>
+                                    <th class="cell100 column1">Sanasi</th>
+
+                                </tr>
+    
+                            </thead>
+                            
+                        </table>
+                    </div>
+    
+         
+                    <div class="table100-body js-pscroll">
+                        
+                        <table id="qushxona_table">
+                            
+                            <tbody>
+                                {% for i in data %}
+                            
+                                <tr >
+                                    <td class="cell100 column1">{{ i.n }}</td>
+                                    <td><a href="{% url 'sotuvchi' i.id %}">{{ i.sotuvchi }}</a></td>
+                                    <td class="cell100 column1">{{ i.mahsulot }}</td>
+                                    <td class="cell100 column1">{{ i.ogirligi }}</td>
+                                    <td class="cell100 column1">{{ i.price }}</td>
+                                    <td class="cell100 column1">{{ i.tulov }}</td>
+                                    <td class="cell100 column1">{{ i.soni }}</td>
+                                    <td class="cell100 column1">{{ i.date }}</td>
+                                </tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td>№</td>
+                                    <td><select name="sotuvchi" id="sotuvchi">
+                                        <option value="">Sotuvchilar</option>
+                                        {% for i in sotuvchilar %}
+                                        <option value="{{ i.id }}">{{ i.full_name }}</option>
+                                        {% endfor %}
+                                    </select></td>
+                                    <td><select name="mahsulot" id="mahsulot">
+                                        <option value="">mahsulotlar</option>
+                                        {% for i in mahsulotlar %}
+                                            <option value="{{i.id}}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select></td>
+                                    <td><input id="ogirligi" type="text"></td>
+                                    <td><input id="price" type="number"></td>
+                                    <td><input id="tulov" type="number"></td>
+                                    <td><button onclick="bozor_chiqim_save()">Save</button></td>
+                                </tr>
+                            
+                            </tbody>
+                            
+                        </table>
+                        
+                        
+    
+                    </div>
+                            
+                </div>
+    
+                <div id="jamisi" class="jami_qarz">
+                
+                    <p style="color: red; text-align: center">
+                        Jami kg: {{ gush }}<br>
+                        Jami soni: {{ soni }}
+                    </p>
+                
+               </div>
+    
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+    <div class="qushxona__table1">
+        <table class="qushxona_table">
+            <tr>
+                <th>№</th>
+                <th>Sotuvchi</th>
+                <th>mahsulot</th>
+                <th>og'irligi</th>
+                <th>Narxi(1kg)</th>
+                <th>Tulov</th>
+                <th>Soni</th>
+                <th>Sanasi</th>
+            </tr>
+            {% for i in data %}
+            <tr>
+                <td>{{ i.n }}</td>
+                <td><a href="{% url 'sotuvchi' i.id %}">{{ i.sotuvchi }}</a></td>
+                <td>{{ i.mahsulot }}</td>
+                <td>{{ i.ogirligi }}</td>
+                <td>{{ i.price }}</td>
+                <td>{{ i.tulov }}</td>
+                <td>{{ i.soni }}</td>
+                <td>{{ i.date }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>№</td>
+                <td><select name="sotuvchi" id="sotuvchi">
+                    <option value="">Sotuvchilar</option>
+                    {% for i in sotuvchilar %}
+                    <option value="{{ i.id }}">{{ i.full_name }}</option>
+                    {% endfor %}
+                </select></td>
+                <td><select name="mahsulot" id="mahsulot">
+                    <option value="">mahsulotlar</option>
+                    {% for i in mahsulotlar %}
+                        <option value="{{i.id}}">{{ i.name }}</option>
+                    {% endfor %}
+                </select></td>
+                <td><input id="ogirligi" type="text"></td>
+                <td><input id="price" type="number"></td>
+                <td><input id="tulov" type="number"></td>
+                <td><button onclick="bozor_chiqim_save()">Save</button></td>
+            </tr>
+        </table>
+    <p style="color: red; text-align: center">
+        Jami kg: {{ gush }}<br>
+        Jami soni: {{ soni }}
+    </p>
+
+    </div>
+
+ -->
+
+
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'bozorbase.html' %}
+{% block content %}
+
+<!--jadvallar almashishida xatolik, jami summadagi o'zgarmay ustiga yozayapti-->
+
+
+<div class="limiter">
+    <div class="row mt-1">
+        <div class="col-sm-2">
+            <select class="form-select " aria-label="Disabled select example" onchange="qushxonadaychange()" name="qushxonaday" id="qushxonaday">
+                <option value="1">Kunlik</option>
+                <option value="7">Haftalik</option>
+                <option value="30">Oylik</option>
+                <option value="365">yillik</option>
+            </select>
+        </div>
+        <div class="col-sm-5"></div>
+        <div class="col-sm-5"></div>
+      </div>
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head" >
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column3">Mahsulot</th>
+                                <th class="cell100 column3">Og'irligi</th>
+                                <th class="cell100 column3">Narxi</th>
+                                <th class="cell100 column3">Jami summa</th>
+                                <th class="cell100 column3">Jami tulov</th>
+                                <th class="cell100 column3">Qarz</th>
+                                <th class="cell100 column3">Sanasi</th>
+                              
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+<br>
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td class="cell100 column3">{{ i.product }}</td>
+                                <td class="cell100 column3">{{ i.quantity }}</td>
+                                <td class="cell100 column3">{{ i.weight }}</td>
+                                <td class="cell100 column3">{{ i.price }}</td>
+                                <td class="cell100 column3">{{ i.jamisuma }}</td>
+                                <td class="cell100 column3">{{ i.jamitulov }}</td>
+                                <td class="cell100 column3">{{ i.qarz }}</td>
+                                <td class="cell100 column3">{{ i.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+
+                </div>
+                        
+            </div>
+
+        
+           <!-- <div id="jamisi" class="jami_qarz"> -->
+            
+            <p style="text-align: center; color: red;" id="qarz">
+                Jami qarzdorlik : {{ jamiqarz }} <br>
+                Jami to'lov : {{ jamitulov }}
+            </p>
+       <!-- </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+    <div>
+        <select onchange="qushxonadaychange()" name="qushxonaday" id="qushxonaday">
+            <option value="1">Kunlik</option>
+            <option value="7">Haftalik</option>
+            <option value="30">Oylik</option>
+            <option value="365">yillik</option>
+
+        </select>
+    </div>
+
+
+
+    <div class="qushxona__table1">
+        <table class="qushxona_table" id="qushxona_table">
+            <tr>
+                <th>№</th>
+                <th>Mahsulot</th>
+                <th>Soni</th>
+                <th>og'irligi</th>
+                <th>Narxi</th>
+                <th>Jami summa</th>
+                <th>Jami tulov</th>
+                <th>Qarz</th>
+                <th>Sanasi</th>
+            </tr>
+            {% for i in data %}
+                <tr>
+                    <td>{{ i.n }}</td>
+                    <td>{{ i.product }}</td>
+                    <td>{{ i.quantity }}</td>
+                    <td>{{ i.weight }}</td>
+                    <td>{{ i.price }}</td>
+                    <td>{{ i.jamisuma }}</td>
+                    <td>{{ i.jamitulov }}</td>
+                    <td>{{ i.qarz }}</td>
+                    <td>{{ i.date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    <p style="text-align: center; color: red;" id="qarz">
+        Jami qarzdorlik : {{ jamiqarz }} <br>
+        Jami to'lov : {{ jamitulov }}
+    </p>
+    </div>
+ -->
+
+
+{% endblock %}

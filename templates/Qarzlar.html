@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+    
+<div class="limiter">
+   
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column1">Optomchi</th>
+                                <th class="cell100 column1">Jami qarz</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td><a href="{% url 'clientPageView' i.id %}">{{ i.Client }}</a></td>
+                                <td class="cell100 column3">{{ i.qarz }}</td>
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+
+                </div>
+                        
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="qushxona__table1">
+    <table class="qushxona_table">
+        <tr>
+            <th>№</th>
+            <th>Optomchi</th>
+            <th>Jami qarz</th>
+        </tr>
+        {% for i in data %}
+            <tr>
+            <td>{{ i.n }}</td>
+            <td><a href="{% url 'clientPageView' i.id %}">{{ i.Client }}</a></td>
+            <td>{{ i.qarz }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+
+
+
+
+
+{% endblock %}

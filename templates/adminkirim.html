@@ -1,0 +1,80 @@
+{% extends 'adminbase.html' %}
+{% block content %}
+{% load static %} 
+
+
+    
+    <div class="limiter">
+        <div class="row mt-1">
+            <div class="col-sm-2">
+                <select class="form-select " aria-label="Disabled select example" name="daychoose" id="daychoose" onchange="changedayadmin('kirim')">
+                    <option value="1">Kunlik</option>
+                    <option value="7">Haftalik</option>
+                    <option value="30">Oylik</option>
+                    <option value="365">yillik</option>
+                </select>
+            </div>
+            <div class="col-sm-5"></div>
+            <div class="col-sm-5"></div>
+          </div>
+        
+        <div class="container-table100">
+            <div class="wrap-table100">
+    
+                
+    
+                <div class="table100 ver1 m-b-110">
+                    <div class=" table100-head">
+                        <table >
+                            <thead>
+                                <tr class="row100 head">
+                                    <th class="cell100 column1">№</th>
+                                    <th class="cell100 column3">Dehqon</th>
+                                    <th class="cell100 column3">summa</th>
+                                    <th class="cell100 column3">Sanasi</th>
+                                </tr>
+    
+                            </thead>
+                            
+                        </table>
+                    </div>
+    
+    
+    
+                    <div class="table100-body js-pscroll">
+                        
+                        <table id="qushxona_table">
+                            
+                            <tbody>
+                                {% for i in kirimlar %}
+                            
+                                <tr >
+                                    <td class="cell100 column1">{{ i.n }}</td>
+                                    <td class="cell100 column3">{{ i.dehqon }}</td>
+                                    <td class="cell100 column3">{{ i.summa }}</td>
+                                    <td class="cell100 column3">{{ i.date }}</td>
+                                </tr>
+                                {% endfor %}
+                            
+                            </tbody>
+                            
+                        </table>
+                        
+                        
+    
+                    </div>
+                            
+                </div>
+    
+                <div id="jamisi" class="jami_qarz">
+                
+                    Jami: {{ jami }}
+               </div>
+    
+            </div>
+        </div>
+    </div>
+
+    
+
+{% endblock %}

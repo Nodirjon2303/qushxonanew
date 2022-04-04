@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+
+
+<div class="limiter">
+
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1" style="text-align: center;">Mijoz</th>
+                                <th class="cell100 column1" style="text-align: center;">Dehqon</th>
+                                <th class="cell100 column1" style="text-align: center;">Soni</th>
+                                <th class="cell100 column1" style="text-align: center;">Bron qilingan vaqti</th>
+
+                                
+
+
+
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.client.full_name }}</td>
+                                <td class="cell100 column1">{{ i.product_dehqon.dehqon.full_name }}</td>
+                                <td class="cell100 column1">{{ i.quantity }}</td>
+                                <td class="cell100 column1">{{ i.created_date }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr id="add_income">
+
+                            </tr>
+                            
+
+
+
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+                <button id="addbutton" class="button_save" onclick="add_bron()">+Add</button>
+
+                </div>
+                        
+            </div>
+
+
+            
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+<div class="qushxona__table1">
+    <table class="qushxona_table">
+        <tr>
+            <th>Mijoz</th>
+            <th>Dehqon</th>
+            <th>Soni</th>
+            <th>Bron qilingan vaqti</th>
+        </tr>
+        {% for i in data %}
+            <tr>
+                <td>{{ i.client.full_name}}</td>
+                <td>{{ i.product_dehqon.dehqon.full_name }}</td>
+                <td>{{ i.quantity }}</td>
+                <td>{{ i.created_date}}</td>
+            </tr>
+        {% endfor %}
+            <tr id="add_income">
+
+            </tr>
+    </table>
+
+    <button id="addbutton" style="text-align:left" onclick="add_bron()">+Add</button>
+    <div class="addbron" id="addbron" style="color: red;text-align:center"></div>
+</div> -->
+{% endblock %}

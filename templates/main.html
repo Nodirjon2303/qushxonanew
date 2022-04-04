@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+
+<div class="limiter">
+    
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 " style="padding-left: 120px;">Ism</th>
+                                <th class="cell100 ">Mahsulot</th>
+                                <th class="cell100 " style="padding-left: 70px;">Son</th>
+                                <th class="cell100 " style="padding-left: 120px;">Taxminiy Massa</th>
+                                <th class="cell100 ">To'lov</th>
+                                <th class="cell100 ">Kelgan vaqti</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1" >{{ i.name }}</td>
+                                <td class="cell100 column1">{{ i.product }}</td>
+                                <td class="cell100 column1">{{ i.quantity }}</td>
+                                <td class="cell100 column1">{{ i.weight }}</td>
+                                <td class="cell100 column1">{{ i.tulov }}</td>
+                                <td class="cell100 column1">{{ i.created_data }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr id="add_kirim">
+
+                            </tr>
+                        
+                        </tbody>
+                        
+                    </table>
+                   
+                    
+                    
+
+                </div>
+            <button id="addbutton" class="button_save" onclick="add_dehqon_column() ">+Add</button>
+                        
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="qushxona__table1" style="display:flex; width:100%">
+    <div class="table">
+    <table class="qushxona_table">
+        <tr>
+            <th>Ism</th>
+            <th>Mahsulot</th>
+            <th>Son</th>
+            <th>Taxminiy Massa</th>
+            <th>To'lov</th>
+            <th>Kelgan vaqti</th>
+        </tr>
+        {% for i in data %}
+            <tr>
+                <td>{{ i.name}}</td>
+                <td>{{ i.product }}</td>
+                <td>{{ i.quantity }}</td>
+                <td>{{ i.weight }}</td>
+                <td>{{ i.tulov }}</td>
+                <td>{{ i.created_data }}</td>
+            </tr>
+        {% endfor %}
+            <tr id="add_kirim">
+
+            </tr>
+    </table>
+    <button id="addbutton" style="text-align:left" onclick="add_dehqon_column() ">+Add</button>
+    </div>
+    <div id="search_results" style="text-align:right; width:50%;">
+{#        <a class="w3-xlarge" style="color: red; background-color: yellow;font-family: 'Allerta Stencil', Sans-serif; " href="#">Ro'zimurodov Nodirjon</a><br>#}
+{#        <a class="w3-xlarge" style="color: red; background-color: yellow;font-family: 'Allerta Stencil', Sans-serif;" href="#">Name</a><br>#}
+    </div>
+</div> -->
+
+
+
+{% endblock %}

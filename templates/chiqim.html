@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<p style="text-align: center;color: red">
+    Qushxonaning kunlik chiqimi
+</p>
+
+<p style="text-align: center;color: red">
+    Dehqonlarga to'lovlar
+</p>
+
+    
+<div class="limiter">
+
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column1">Dehqon</th>
+                                <th class="cell100 column1">Miqdori</th>
+                                <th class="cell100 column1">Sanasi</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in chiqimlar %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td class="cell100 column3">{{ i.mijoz }}</td>
+                                <td class="cell100 column3">{{ i.amount }}</td>
+                                <td class="cell100 column3">{{ i.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+                    
+
+                </div>
+                
+            <div id="jamisi" class="jami_qarz">
+            
+                Dehqonlarga jami tulovlar: {{ dehqonjami }}
+           </div>
+            
+                <!-- <p style="text-align: center;color: red" >
+                    Dehqonlarga jami tulovlar: {{ dehqonjami }}
+                </p> -->
+                        
+            </div>
+
+            
+            
+            <p style="text-align: center;color: red">
+                Boshqa xarajatlar
+            </p>
+            
+            
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column1">Maqsadi</th>
+                                <th class="cell100 column1">Miqdori</th>
+                                <th class="cell100 column1">Sanasi</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td class="cell100 column3">{{ i.maqsad }}</td>
+                                <td class="cell100 column3">{{ i.miqdori }}</td>
+                                <td class="cell100 column3">{{ i.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+                    
+
+                </div>
+                    
+            <p style="text-align:center;color:red">
+                Boshqa xarajatlar {{ chiqimb }}<br>
+                Kunlik kassa: {{ kassa }}
+            </p>
+
+                    
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+<div class="qushxona__table1">
+<p style="text-align: center;color: red">
+    Qushxonaning kunlik chiqimi
+</p>
+
+<p style="text-align: center;color: red">
+    Dehqonlarga to'lovlar
+</p>
+<table class="qushxona_table">
+    <tr>
+        <th>№</th>
+        <th>Dehqon</th>
+        <th>miqdori</th>
+        <th>Sanasi</th>
+    </tr>
+    {% for i in chiqimlar %}
+    <tr>
+        <th>{{ i.n }}</th>
+    <th>{{ i.mijoz }}</th>
+    <th>{{ i.amount }}</th>
+    <th>{{ i.date }}</th>
+    </tr>
+    {% endfor %}
+</table>
+<p style="text-align: center;color: red" >
+    Dehqonlarga jami tulovlar: {{ dehqonjami }}
+</p>
+
+
+<p style="text-align: center;color: red">
+    Boshqa xarajatlar
+</p>
+
+
+<table class="qushxona_table">
+            <tr>
+                <th>№</th>
+                <th>Maqsadi</th>
+                <th>miqdori</th>
+                <th>date</th>
+            </tr>
+            {% for i in  data %}
+                <tr>
+                    <td>{{ i.n }}</td>
+                    <td>{{ i.maqsad }}</td>
+                    <td>{{ i.miqdori }}</td>
+                    <td>{{ i.date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+
+<p style="text-align:center;color:red">
+    Boshqa xarajatlar {{ chiqimb }}<br>
+    Kunlik kassa: {{ kassa }}
+</p>
+</div> -->
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {% for i in data %}
+    <div class="seperate" style="border: 1px solid; border-color:#63d7bb; margin: 35px; background-color:rgba(125,178,207,0.9)">
+        <h4>{{ i.dehqon }}  {{ i.quantity }}ta {{ i.product }}  </h4>
+        <h4>Sanasi: {{ i.date }}</h4>
+        <h4>Sotilganlar soni: {{ i.sotilganlari }}</h4>
+        <h4>Bron qilinganlari: {{ i.bron }}</h4>
+        <h4>og'irligi: {{ i.ogirligi }}</h4>
+        <h4>narxi: <input onchange="clientpricechange({{ i.id }})" value="{{ i.price }}" id="newprice_{{ i.id }}" type="number"></h4>
+        <h4>Jami to'lov: {{ i.Summa }}</h4>
+        <h4>Qolgan qarz: {{ i.qarz }}</h4>
+        <h3 style="text-align:center"> Dehqonning barcha to'lovlari</h3>
+        <div style="magin: 20px" class="qushxona__table1">
+        <table class="qushxona_table">
+            <tr>
+                <th>№</th>
+                <th>To'lov miqdori</th>
+                <th>To'lov sanasi</th>
+            </tr>
+            {% for j in i.tulovlar %}
+            <tr>
+                <td>{{ j.id }}</td>
+                <td>{{ j.amount }}</td>
+                <td>{{ j.date }}</td>
+            </tr>
+                {% endfor %}
+            <tr>
+                <td>{{ i.next }}</td>
+                <td><input id="tulov_summa_{{ i.id }}" type="number"></td>
+                <td><button onclick="income_dehqon_save({{ i.id }})" >Save</button></td>
+            </tr>
+        </table>
+        <div id="status" style="color:red;text-align: center">
+
+        </div>
+        </div>
+    {% if i.status %}
+
+
+    <button style="color:darkred;text-decoration:none;text-align:center;margin-top: 20px;margin-left: 75px" onclick="completed_dehqon({{ i.id }})">Dehqonni yakunlash</button>
+    {% endif %}
+    </div>
+
+
+    {% endfor %}
+
+
+
+
+
+
+{% endblock %}

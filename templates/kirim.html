@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<p style="text-align: center;color: red; font-size: 25px;">
+    Qushxonaning kunlik kirimi
+</p>
+
+
+    
+<div class="limiter">
+
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column1">Mijoz</th>
+                                <th class="cell100 column1">Miqdor</th>
+                                <th class="cell100 column1">Sanasi</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in kirimlar %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td class="cell100 column3">{{ i.mijoz }}</td>
+                                <td class="cell100 column3">{{ i.amount }}</td>
+                                <td class="cell100 column3">{{ i.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+
+                </div>
+                        
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+    <p style="text-align: center;color: red">
+    Qushxonaning kunlik kirimi
+</p>
+<div class="qushxona__table1">
+<table class="qushxona_table">
+    <tr>
+        <th>№</th>
+        <th>mijoz</th>
+        <th>miqdori</th>
+        <th>Sanasi</th>
+    </tr>
+    {% for i in kirimlar %}
+    <tr>
+        <th>{{ i.n }}</th>
+    <th>{{ i.mijoz }}</th>
+    <th>{{ i.amount }}</th>
+    <th>{{ i.date }}</th>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+ -->
+
+
+
+
+{% endblock %}

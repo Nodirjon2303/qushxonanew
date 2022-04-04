@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<h3 style="color: white; margin: 30px;">Qushxona teri oluvchilar</h3>
+
+<div class="limiter">
+    <div class="row mt-1">
+        <div class="col-sm-2">
+            <select class="form-select " aria-label="Disabled select example" name="data" id="dataday" onchange="changedayteri('teri')">
+                <option value="1">Kunlik</option>
+                <option value="7">Haftalik</option>
+                <option value="30">Oylik</option>
+                <option value="365">yillik</option>
+            </select>
+        </div>
+        <div class="col-sm-5"></div>
+        <div class="col-sm-5"></div>
+      </div>
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column1">Sotuvchi</th>
+                                <th class="cell100 column1">Mol Turi</th>
+                                <th class="cell100 column1">Soni</th>
+                                <th class="cell100 column1">Sanasi</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_terikalla">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.id }}</td>
+                                <td class="cell100 column1">{{ i.mijoz }}</td>
+                                <td class="cell100 column1">{{ i.product.name  }}</td>
+                                <td class="cell100 column1">{{ i.soni }}</td>
+                                <td class="cell100 column1">{{ i.created_date }}</td>
+                            </tr>
+                            {% endfor %}
+
+                            <tr>
+                                <td>{{ id }}</td>
+                                <td><select name="mijozlar" id="mijoz">
+                                    {% for i in mijoz %}
+                                        <option value="{{ i.id }}">{{ i.full_name }}</option>
+                                    {% endfor %}
+                                </select></td>
+                                <td><select name="mahsulotlar" id="product">
+                                    {% for i in product %}
+                                        <option value="{{ i.id }}">{{ i.name }}</option>
+                                    {% endfor %}
+                                </select></td>
+                                <td><input type="number" id="quantity"></td>
+                                
+                            </tr>
+                        
+                        </tbody>
+                        
+                    </table>
+                    <button class="button_save" onclick="kallaterisave('teri')" >Save</button>
+                    
+                    
+
+                </div>
+                        
+            </div>
+
+           
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Yillik ozgarishlar chiqmadi -->
+
+
+
+
+
+
+
+<!-- 
+    <h3>Qushxona teri oluvchilar</h3>
+    <select name="data" id="dataday" onchange="changedayteri('teri')">
+        <option value="1">Kunlik</option>
+        <option value="7">Haftalik</option>
+        <option value="30">Oylik</option>
+    </select>
+
+
+    <div class="qushxona__table1">
+        <table class="qushxona_table" id="qushxona_terikalla">
+            <tr>
+                <th>Sotuvchi</th>
+                <th>Mol Turi</th>
+                <th>Soni</th>
+                <th>Sanasi</th>
+            </tr>
+            {% for i in data %}
+                <tr>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.mijoz }}</td>
+                    <td>{{ i.product.name }}</td>
+                    <td>{{ i.soni }}</td>
+                    <td>{{ i.created_date }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>{{ id }}</td>
+                <td><select name="mijozlar" id="mijoz">
+                    {% for i in mijoz %}
+                        <option value="{{ i.id }}">{{ i.full_name }}</option>
+                    {% endfor %}
+                </select></td>
+                <td><select name="mahsulotlar" id="product">
+                    {% for i in product %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select></td>
+                <td><input type="number" id="quantity"></td>
+                <td><button onclick="kallaterisave('teri')" >Save</button></td>
+            </tr>
+        </table>
+    </div> -->
+
+
+
+
+{% endblock %}

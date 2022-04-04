@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+
+
+<div class="limiter">
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1 " style="text-align: center;">№</th>
+                                <th class="cell100 column1" style="text-align: center;">Maqsadi</th>
+                                <th class="cell100 column1" style="text-align: center;">Miqdori</th>
+                                <th class="cell100 column1" style="text-align: center;">Sanasi</th>
+                            </tr>
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td class="cell100 column1">{{ i.maqsad }}</td>
+                                <td class="cell100 column1">{{ i.miqdori }}</td>
+                                <td class="cell100 column1">{{ i.date }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>№</td>
+                                <td><input id="comment" type="text" style="background-color: beige;"></td>
+                                <td><input id="amount" type="number" style="background-color: beige;"></td>
+                                
+                            </tr>
+                        
+                        </tbody>
+                        
+                    </table>
+                    <button class="button_save" onclick="expensesave('qushxona')" >Save</button>
+                    
+
+                </div>
+                        
+            </div>
+
+    
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+    <div class="qushxona__table1">
+        <table class="qushxona_table">
+            <tr>
+                <th>№</th>
+                <th>Maqsadi</th>
+                <th>miqdori</th>
+                <th>date</th>
+            </tr>
+            {% for i in  data %}
+                <tr>
+                    <td>{{ i.n }}</td>
+                    <td>{{ i.maqsad }}</td>
+                    <td>{{ i.miqdori }}</td>
+                    <td>{{ i.date }}</td>
+                </tr>
+            {% endfor %}
+
+        <tr>
+            <td>№</td>
+            <td><input id="comment" type="text"></td>
+            <td><input id="amount" type="number"></td>
+            <td><button onclick="expensesave('qushxona')" >Save</button></td>
+        </tr>
+        </table>
+    </div> -->
+
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+
+
+
+
+
+
+
+<div class="limiter">
+    
+    
+    <div class="container-table100">
+        <div class="wrap-table100">
+
+            
+
+            <div class="table100 ver1 m-b-110">
+                <div class=" table100-head">
+                    <table >
+                        <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">Ismi</th>
+                                <th class="cell100 column1">Mahsuloti</th>
+                                <th class="cell100 column1">Sotilganlar soni</th>
+                                <th class="cell100 column1">Og'irligi</th>
+                                <th class="cell100 column1">Tiriklari soni</th>
+                                <th class="cell100 column1">Narxi</th>
+                                <th class="cell100 column1">Sanasi</th>
+                            </tr>
+                          
+
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+
+                <div class="table100-body js-pscroll">
+                    
+                    <table id="qushxona_table">
+                        
+                        <tbody>
+                            {% for i in data %}
+                        
+                            <tr >
+                                <td class="cell100 column1" ><a href="{% url 'dehqonpage' i.dehqon_id %}">{{ i.dehqon }}</a></td>
+                                <td class="cell100 column1">{{ i.product }}</td>
+                                <td class="cell100 column1">{{ i.sotilganlar }}</td>
+                                <td class="cell100 column1">{{ i.weight }}</td>
+                                <td class="cell100 column1">{{ i.tiriklari }}</td>
+                                <td class="cell100 column1"><input onchange="clientpricechange({{ i.id }})" value="{{ i.price }}" id="newprice_{{ i.id }}" type="number"></td>
+                                <td class="cell100 column1">{{ i.sanasi }}</td>
+
+                                
+
+
+
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                        
+                    </table>
+                    
+                    
+
+                </div>
+                        
+            </div>
+
+          
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+<div class="qushxona__table1">
+    <table class="qushxona_table">
+        <tr>
+            <th>Dehqonning Ismi</th>
+            <th>Mahsuloti</th>
+            <th>Sotilganlar soni</th>
+            <th>Og'irligi</th>
+            <th>Tiriklari soni</th>
+            <th>Narxi</th>
+            <th>Sanasi</th>
+        </tr>
+        {% for i in data %}
+        <tr>
+        <td><a href="{% url 'dehqonpage' i.dehqon_id %}">{{ i.dehqon }}</a></td>
+        <td>{{ i.product }}</td>
+        <td>{{ i.sotilganlar }}</td>
+        <td>{{ i.weight }}</td>
+        <td>{{ i.tiriklari }}</td>
+        <td><input onchange="clientpricechange({{ i.id }})" value="{{ i.price }}" id="newprice_{{ i.id }}" type="number"></td>
+        <td>{{ i.sanasi }}</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+
+
+</div>
+
+
+
+ -->
+
+
+
+
+{% endblock %}
