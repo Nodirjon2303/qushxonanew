@@ -115,7 +115,7 @@ def saveView(request):
                 expense.save()
                 try:
                     text = f"Dehqonga to'lov!!!\n" \
-                           f"Dehqonning ismi: {expense.dehqon_product.dehqon.full_name}" \
+                           f"Dehqonning ismi: {expense.dehqon_product.dehqon.full_name}\n" \
                            f"Tulov miqdori: {expense.amount}"
                     requests.post(
                         f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001591856875&text={text}')
@@ -775,7 +775,7 @@ def bozorchiqimView(request):
             ExpenseSotuvchi.objects.create(income_sotuvchi=income, amount=int(tulov))
         return JsonResponse({'data': 'ok'})
 
-    client = Client.objects.filter(role='client').first()
+    client = Client.objects.filter(role='client', status_bozor=True).first()
     jami_gush = 0
     jami_soni = 0
     incomes = IncomeSotuvchi.objects.filter(status='progress')
@@ -828,6 +828,15 @@ def bozorboshqachiqimView(request):
         miqdor = data['miqdor']
         id = data['id']
         ExpenseSotuvchi.objects.create(income_sotuvchi_id=id, amount=miqdor).save()
+        sotuvchi = IncomeSotuvchi.objects.get(id = id).sotuvchi
+        try:
+            text = f"Sotuvchidan to'lov!!!\n" \
+                   f"Sotuvchining ismi: {sotuvchi.full_name}\n" \
+                   f"Tulov miqdori: {str(miqdor)[:-3]+' '+str(miqdor)[-3:]}"
+            requests.post(
+                f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
+        except Exception as e:
+            print(e)
         return JsonResponse({'data': 'ok'})
     datab = []
     Jami = 0

@@ -24,7 +24,7 @@ class Client(models.Model):
     ])
     status_bozor = models.BooleanField(default=False, null=True, blank=True)
     def __str__(self):
-        return f"{self.full_name}"
+        return f"{self.full_name} {self.role}  {self.status_bozor}"
 class  ExpenseDehqon(models.Model):
     dehqon = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
