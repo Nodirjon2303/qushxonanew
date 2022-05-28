@@ -43,7 +43,7 @@ class IncomeClient(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, related_name='qaysi client oldi+')
     product_dehqon = models.ForeignKey(ExpenseDehqon, on_delete=models.SET_NULL, null=True, related_name='qaysi dehqonni qoyi+')
     quantity = models.IntegerField(null=True, blank=True)
-    weight = models.IntegerField(null=True, blank=True, default=0)
+    weight = models.FloatField(null=True, blank=True, default=0)
     price = models.IntegerField(null=True, blank=True, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=125, null=True, blank=True, choices=[('bron', 'Bron qilindi'), ('progress', 'Jarayonda'), ('completed', 'Yakunlandi')], default='progress')
