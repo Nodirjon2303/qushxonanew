@@ -61,7 +61,7 @@ class IncomeSotuvchi(models.Model):
     status = models.CharField(max_length=88, null=True, blank=True,choices=[("progress", "Jarayonda"), ("completed", "yakunlandi")] ,default='progress')
 
     def __str__(self):
-        return f"{self.sotuvchi.full_name} {self.product} {self.created_date.ctime()}"
+        return f"{self.sotuvchi} {self.product} {self.created_date.ctime()}"
 
 class IncomeDehqon(models.Model):
     dehqon_product = models.ForeignKey(ExpenseDehqon, on_delete=models.SET_NULL, null=True)
