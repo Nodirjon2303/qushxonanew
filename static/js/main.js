@@ -97,6 +97,7 @@ function save_income() {
             })
                 .then((response) => {
                     response.json().then((data) => {
+                        console.log(data)
                         if (data['data'] == 'ok') {
                             location.reload()
                         } else {

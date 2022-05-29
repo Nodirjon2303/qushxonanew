@@ -133,6 +133,7 @@ def saveIncomeView(request):
         price = data['price']
         dehqon = data['dehqon']
         mijoz = data['mijoz']
+        print(dehqon)
         massa = 0
         ogirliki = weight
         data = weight.split('+')
@@ -146,27 +147,34 @@ def saveIncomeView(request):
                 a = float(i)
                 massa += a
             except:
-                return JsonResponse({'data': 'error'})
+                return JsonResponse({'data': 'error149'})
         mijoz = Client.objects.get(full_name=mijoz)
         dehqon = IncomeClient.objects.get(id=int(dehqon))
         product_dehqon = dehqon.product_dehqon
-        text = f"Dehqon: {dehqon.product_dehqon.dehqon.full_name}\nMijoz: {mijoz.full_name}\nOg'irligi: {ogirliki} = {massa}kg\nSoni: {quantity}ta \nNarxi(1 kg) : {price}\nJami: {massa * price}\nSanasi:{datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}"
-        requests.post(
-            f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001681426591&text={text}')
         if dehqon.quantity < quantity:
-            return JsonResponse({'data': 'error'})
+            return JsonResponse({'data': 'error157'})
         elif dehqon.quantity == quantity:
             dehqon.delete()
-            return JsonResponse({'data': 'ok'})
         else:
             dehqon.quantity -= quantity
             dehqon.save()
         IncomeClient.objects.create(client=mijoz, product_dehqon=product_dehqon, quantity=quantity, weight=massa,
                                     price=price)
+        text = f"Dehqon: {dehqon.product_dehqon.dehqon.full_name}\nMijoz: {mijoz.full_name}\nOg'irligi: {ogirliki} = {massa}kg\nSoni: {quantity}ta \nNarxi(1 kg) : {price}\nJami: {massa * price}\nSanasi:{datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}"
+        requests.post(
+            f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001681426591&text={text}')
+
         return JsonResponse({'data': 'ok'})
 
 @qushxona_only
 def incomeView(request):
+    #
+    # IncomeClient.objects.all().delete()
+    # IncomeSotuvchi.objects.all().delete()
+    # IncomeDehqon.objects.all().delete()
+    # ExpenseDehqon.objects.all().delete()
+    # ExpenseClient.objects.all().delete()
+    # ExpenseSotuvchi.objects.all().delete()
     if request.method == 'POST':
         data = json.loads(request.body)
         mijozlar = Client.objects.filter(role='client')
