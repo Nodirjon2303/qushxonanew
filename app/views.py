@@ -769,7 +769,7 @@ def bozorchiqimView(request):
             quantity = len(data)
         for i in data:
             try:
-                a = int(i)
+                a = float(i)
                 massa += a
             except:
                 return JsonResponse({'data': 'error'})
