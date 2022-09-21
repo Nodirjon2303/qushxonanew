@@ -1,6 +1,7 @@
 import datetime
 
 import django
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -23,6 +24,13 @@ class Client(models.Model):
         ('Teri', 'Teri oluvchi sotuvchi')
     ])
     status_bozor = models.BooleanField(default=False, null=True, blank=True)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.status_bozor and Client.objects.filter(status_bozor=True).count() > 1:
+            self.status_bozor = False
+            return ValidationError({"status_bozor": "Allaqachon Bozor uchun sotuvchi tanlangan\n"
+                                                    "Bozor uchun sotuvchi faqat 1 kishi bo'lishi mumkin!!!"})
 
     def __str__(self):
         return f"{self.full_name} {self.role}  {self.status_bozor}"

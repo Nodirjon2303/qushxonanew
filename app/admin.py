@@ -11,3 +11,7 @@ admin.site.register(ExpenseSotuvchi)
 admin.site.register(ExpenseClient)
 admin.site.register(KallaHasb)
 admin.site.register(Teri)
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'phone', 'role']
