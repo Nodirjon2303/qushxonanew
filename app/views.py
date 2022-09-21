@@ -217,18 +217,22 @@ def incomeView(request):
     data = []
 
     for i in incomes:
-        data.append({
-            'id': i.client.id,
-            'client': i.client.full_name,
-            'dehqon': f"{i.product_dehqon.dehqon.full_name}ning {i.product_dehqon.quantity}ta {i.product_dehqon.product.name}lari",
-            'product': i.product_dehqon.product.name,
-            'quantity': i.quantity,
-            'weight': i.weight,
-            'price': i.price,
-            'total_price': i.price * i.weight,
-            'created_data': i.created_date.strftime("%d-%m-%Y %H:%M")
+        try:
+            data.append({
+                'id': i.client.id,
+                'client': i.client.full_name,
+                'dehqon': f"{i.product_dehqon.dehqon.full_name}ning {i.product_dehqon.quantity}ta {i.product_dehqon.product.name}lari",
+                'product': i.product_dehqon.product.name,
+                'quantity': i.quantity,
+                'weight': i.weight,
+                'price': i.price,
+                'total_price': i.price * i.weight,
+                'created_data': i.created_date.strftime("%d-%m-%Y %H:%M")
 
-        })
+            })
+        except Exception as e:
+            print(e)
+            continue
     return render(request, 'IncomeClient.html', {'data': data})
 
 @qushxona_only
