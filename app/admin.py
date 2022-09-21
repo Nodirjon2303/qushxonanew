@@ -13,5 +13,5 @@ admin.site.register(Teri)
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'phone', 'role', 'bozor_status']
+    list_display = ['full_name', 'phone', 'role', 'status_bozor']
     search_fields = ['full_name', 'phone']
