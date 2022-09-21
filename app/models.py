@@ -37,8 +37,8 @@ class Client(models.Model):
 
 
 class ExpenseDehqon(models.Model):
-    dehqon = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    dehqon = models.ForeignKey(Client, on_delete=models.PROTECT, null=True)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True, default=0)
@@ -51,7 +51,7 @@ class ExpenseDehqon(models.Model):
 
 
 class IncomeClient(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True,
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True,
                                related_name='qaysi client oldi+')
     product_dehqon = models.ForeignKey(ExpenseDehqon, on_delete=models.SET_NULL, null=True,
                                        related_name='qaysi dehqonni qoyi+')
@@ -74,8 +74,8 @@ class IncomeClient(models.Model):
 
 
 class IncomeSotuvchi(models.Model):
-    sotuvchi = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    sotuvchi = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
@@ -88,7 +88,7 @@ class IncomeSotuvchi(models.Model):
 
 
 class IncomeDehqon(models.Model):
-    dehqon_product = models.ForeignKey(ExpenseDehqon, on_delete=models.SET_NULL, null=True)
+    dehqon_product = models.ForeignKey(ExpenseDehqon, on_delete=models.PROTECT, null=True)
     amount = models.IntegerField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -101,7 +101,7 @@ class IncomeDehqon(models.Model):
 
 class ExpenseClient(models.Model):
     amount = models.IntegerField(null=True, blank=True, default=0)
-    income_client = models.ForeignKey(IncomeClient, models.SET_NULL, null=True)
+    income_client = models.ForeignKey(IncomeClient, models.PROTECT, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -109,7 +109,7 @@ class ExpenseClient(models.Model):
 
 
 class ExpenseSotuvchi(models.Model):
-    income_sotuvchi = models.ForeignKey(IncomeSotuvchi, models.SET_NULL, null=True)
+    income_sotuvchi = models.ForeignKey(IncomeSotuvchi, models.PROTECT, null=True)
     amount = models.IntegerField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -118,7 +118,7 @@ class ExpenseSotuvchi(models.Model):
 
 
 class KallaHasb(models.Model):
-    mijoz = models.ForeignKey(Client, models.SET_NULL, null=True, blank=True)
+    mijoz = models.ForeignKey(Client, models.PROTECT, null=True, blank=True)
     product = models.ForeignKey(Product, models.SET_NULL, null=True, blank=True)
     soni = models.IntegerField(null=True, blank=True, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -128,7 +128,7 @@ class KallaHasb(models.Model):
 
 
 class Teri(models.Model):
-    mijoz = models.ForeignKey(Client, models.SET_NULL, null=True, blank=True)
+    mijoz = models.ForeignKey(Client, models.PROTECT, null=True, blank=True)
     product = models.ForeignKey(Product, models.SET_NULL, null=True, blank=True)
     soni = models.IntegerField(null=True, blank=True, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
