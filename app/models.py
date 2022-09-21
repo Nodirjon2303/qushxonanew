@@ -58,9 +58,9 @@ class IncomeClient(models.Model):
     def __str__(self):
         title = ""
         if self.client:
-            title += f"{self.client.full_name}"
+            title += f"{self.client.full_name}  "
         if self.product_dehqon and self.product_dehqon.product:
-            title += f"{self.product_dehqon.product.name}"
+            title += f"  {self.product_dehqon.product.name}"
         title += f"{self.created_date.ctime()}"
         return title
 
