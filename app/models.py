@@ -85,7 +85,10 @@ class IncomeDehqon(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.dehqon_product.dehqon.full_name}   {self.amount}"
+        if self.dehqon_product and self.dehqon_product.dehqon:
+            return f"{self.dehqon_product.dehqon.full_name}   {self.amount}"
+        else:
+            return f"{self.amount}"
 
 
 class ExpenseClient(models.Model):
