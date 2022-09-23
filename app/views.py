@@ -8,25 +8,28 @@ import json
 from django.db.models import Q
 import requests
 
-
 from functools import wraps
+
+
 def admin_only(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
 
         profile = request.user
-        if 'admin' in  profile.username :
+        if 'admin' in profile.username:
             return function(request, *args, **kwargs)
         else:
             return redirect('login')
 
     return wrap
+
+
 def qushxona_only(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
 
         profile = request.user
-        if ('qushxona' in  profile.username) or ('admin' in profile.username) :
+        if ('qushxona' in profile.username):
             return function(request, *args, **kwargs)
         else:
             return redirect('login')
@@ -39,14 +42,12 @@ def bozor_only(function):
     def wrap(request, *args, **kwargs):
 
         profile = request.user
-        if 'bozor' in  profile.username :
+        if 'bozor' in profile.username:
             return function(request, *args, **kwargs)
         else:
             return redirect('login')
 
     return wrap
-
-
 
 
 @qushxona_only
@@ -84,6 +85,7 @@ def homeView(request):
 
     return render(request, 'main.html', {'data': data
                                          })
+
 
 @qushxona_only
 def saveView(request):
@@ -125,6 +127,7 @@ def saveView(request):
         else:
             return JsonResponse({'data': 'error'})
 
+
 @qushxona_only
 def saveIncomeView(request):
     if request.method == 'POST':
@@ -165,6 +168,7 @@ def saveIncomeView(request):
             f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001681426591&text={text}')
 
         return JsonResponse({'data': 'ok'})
+
 
 @qushxona_only
 def incomeView(request):
@@ -235,6 +239,7 @@ def incomeView(request):
             continue
     return render(request, 'IncomeClient.html', {'data': data})
 
+
 @qushxona_only
 def clientPageView(request, slug):
     client = Client.objects.get(id=slug)
@@ -267,6 +272,7 @@ def clientPageView(request, slug):
         })
     return render(request, 'ClientPage.html', {'data': data})
 
+
 @qushxona_only
 def clientPaymentView(request):
     if request.method == 'POST':
@@ -288,6 +294,7 @@ def clientPaymentView(request):
             product.status = 'completed'
             product.save()
         return JsonResponse({'data': 'ok'})
+
 
 @qushxona_only
 def incomeDehqonView(request):
@@ -314,11 +321,12 @@ def incomeDehqonView(request):
 
     return render(request, 'IncomeDehqon.html', {"data": data})
 
+
 def SearchboxView(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         dehqon = data['search']
-        data = Client.objects.filter(Q(full_name__contains=f'{dehqon}')& (Q(role='dehqon')|Q(role='client')))
+        data = Client.objects.filter(Q(full_name__contains=f'{dehqon}') & (Q(role='dehqon') | Q(role='client')))
         print(data)
         context = []
         for i in data:
@@ -327,7 +335,7 @@ def SearchboxView(request):
                 'id': i.id,
                 'role': i.role
             })
-        return  JsonResponse({'data': context})
+        return JsonResponse({'data': context})
 
 
 @qushxona_only
@@ -340,6 +348,7 @@ def priceChangeView(request):
         product.price = miqdor
         product.save()
         return JsonResponse({'data': 'ok'})
+
 
 @qushxona_only
 def dehqonView(request, slug):
@@ -383,6 +392,7 @@ def dehqonView(request, slug):
         })
     return render(request, 'dehqon.html', {'data': data})
 
+
 @qushxona_only
 def dehqonIncomeView(request):
     if request.method == 'POST':
@@ -401,6 +411,7 @@ def dehqonIncomeView(request):
             print(e)
         return JsonResponse({'data': 'ok'})
 
+
 @qushxona_only
 def dehqonCompleteView(request):
     if request.method == 'POST':
@@ -410,6 +421,7 @@ def dehqonCompleteView(request):
         expense.status = 'completed'
         expense.save()
         return JsonResponse({"data": 'ok'})
+
 
 @qushxona_only
 def teriView(request):
@@ -455,6 +467,7 @@ def teriView(request):
     product = Product.objects.all()
     return render(request, 'teri.html', {'data': teris, 'id': id, 'mijoz': mijozlar, 'product': product})
 
+
 @qushxona_only
 def kallaHasbView(request):
     if request.method == 'POST':
@@ -473,6 +486,7 @@ def kallaHasbView(request):
     mijozlar = Client.objects.filter(role='kallahasb')
     product = Product.objects.all()
     return render(request, 'kallahasb.html', {'data': kallas, 'id': id, 'mijoz': mijozlar, 'product': product})
+
 
 @qushxona_only
 def kirimView(request):
@@ -493,6 +507,7 @@ def kirimView(request):
         kirim += i.amount
         sanoq += 1
     return render(request, 'kirim.html', {'kirimlar': data, 'kassa': (kirim - chiqim)})
+
 
 @qushxona_only
 def chiqimView(request):
@@ -521,7 +536,7 @@ def chiqimView(request):
             'amount': i.amount
         })
         chiqim += i.amount
-        sanoq+=1
+        sanoq += 1
     datab = []
     xarajatlar = Xarajat.objects.filter(created_date__date=datetime.date.today(), choise='qushxona')
     sanoq = 1
@@ -537,6 +552,7 @@ def chiqimView(request):
     return render(request, 'chiqim.html',
                   {'chiqimlar': data, 'kassa': (kirim - chiqim - chiqimb), 'dehqonjami': chiqim, 'data': datab,
                    'chiqimb': chiqimb})
+
 
 @qushxona_only
 def bronView(request):
@@ -563,6 +579,7 @@ def bronView(request):
         })
     mijozlar = IncomeClient.objects.filter(status='bron')
     return render(request, 'bron.html', {'data': mijozlar})
+
 
 @qushxona_only
 def mijozchangeView(request):
@@ -604,6 +621,7 @@ def loginView(request):
                 return redirect('home')
 
     return render(request, 'login.html', {})
+
 
 @admin_only
 def adminkirimView(request):
@@ -669,6 +687,7 @@ def adminkirimView(request):
         Jami += i.amount
     return render(request, 'adminkirim.html', {'kirimlar': data, 'jami': Jami})
 
+
 @admin_only
 def adminchiqimView(request):
     chiqimlar = IncomeDehqon.objects.filter(created_date__date=datetime.date.today())
@@ -698,6 +717,7 @@ def adminchiqimView(request):
         sanoq += 1
     return render(request, 'adminchiqim.html', {'chiqimlar': data, 'jami': Jami, 'data': datab})
 
+
 @admin_only
 def adduserView(request):
     if request.method == 'POST':
@@ -710,6 +730,7 @@ def adduserView(request):
         return JsonResponse({'data': 'ok'})
     users = Client.objects.all()
     return render(request, 'adminadduser.html', {'users': users})
+
 
 @qushxona_only
 def qarzView(request):
@@ -735,6 +756,7 @@ def qarzView(request):
 
     return render(request, 'Qarzlar.html', {"data": data})
 
+
 @qushxona_only
 def otherexpenseView(request):
     if request.method == 'POST':
@@ -755,6 +777,7 @@ def otherexpenseView(request):
             'date': i.created_date.strftime("%d-%m-%Y %H:%M")
         })
     return render(request, 'boshqa.html', {'data': data})
+
 
 @bozor_only
 def bozorchiqimView(request):
@@ -777,8 +800,9 @@ def bozorchiqimView(request):
                 massa += a
             except:
                 return JsonResponse({'data': 'error'})
-        income = IncomeSotuvchi.objects.create(sotuvchi_id=sotuvchi, product_id=mahsulot, quantity=quantity, weight=massa,
-                                      price=price)
+        income = IncomeSotuvchi.objects.create(sotuvchi_id=sotuvchi, product_id=mahsulot, quantity=quantity,
+                                               weight=massa,
+                                               price=price)
         text = f"Sotuvchi: {income.sotuvchi.full_name}\nOg'irligi: {weight} = {massa}kg\nSoni: {quantity}ta \nNarxi(1 kg) : {price}\nJami: {massa * price}\nSanasi:{datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}"
         requests.post(
             f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
@@ -802,7 +826,7 @@ def bozorchiqimView(request):
             "ogirligi": i.weight,
             'soni': i.quantity,
             'price': i.price,
-            'tulov' : sum([j.amount for j in ExpenseSotuvchi.objects.filter(income_sotuvchi=i)]),
+            'tulov': sum([j.amount for j in ExpenseSotuvchi.objects.filter(income_sotuvchi=i)]),
             'date': i.created_date.strftime("%d-%m-%Y %H:%M")
         })
         jami_gush += i.weight
@@ -833,6 +857,7 @@ def bozorchiqimView(request):
                   {'gush': jami_gush, 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar, 'mahsulotlar': datam,
                    'bazadaqolganson': jamiqolganson, 'qolganogirlik': jamiogirlik})
 
+
 @bozor_only
 def bozorboshqachiqimView(request):
     if request.method == 'POST':
@@ -840,11 +865,11 @@ def bozorboshqachiqimView(request):
         miqdor = data['miqdor']
         id = data['id']
         ExpenseSotuvchi.objects.create(income_sotuvchi_id=id, amount=miqdor).save()
-        sotuvchi = IncomeSotuvchi.objects.get(id = id).sotuvchi
+        sotuvchi = IncomeSotuvchi.objects.get(id=id).sotuvchi
         try:
             text = f"Sotuvchidan to'lov!!!\n" \
                    f"Sotuvchining ismi: {sotuvchi.full_name}\n" \
-                   f"Tulov miqdori: {str(miqdor)[:-3]+' '+str(miqdor)[-3:]}"
+                   f"Tulov miqdori: {str(miqdor)[:-3] + ' ' + str(miqdor)[-3:]}"
             requests.post(
                 f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
         except Exception as e:
@@ -864,6 +889,7 @@ def bozorboshqachiqimView(request):
         Jami += i.amount
         sanoq += 1
     return render(request, 'bozorboshqaxarajat.html', {"data": datab})
+
 
 @bozor_only
 def sotuvchiView(request, slug):
@@ -900,13 +926,15 @@ def sotuvchiView(request, slug):
 
     return render(request, 'sotuvchi.html', {'data': data})
 
+
 @bozor_only
 def qushxonastatisticsView(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         day = int(data['day'])
         client = Client.objects.filter(status_bozor=True, role='client').first()
-        incomes = IncomeClient.objects.filter(client=client, created_date__gte=(datetime.datetime.now()-datetime.timedelta(days=day)))
+        incomes = IncomeClient.objects.filter(client=client, created_date__gte=(
+                    datetime.datetime.now() - datetime.timedelta(days=day)))
         data = []
         sanoq = 1
         jamiqarz = 0
@@ -925,11 +953,11 @@ def qushxonastatisticsView(request):
                 'date': i.created_date.strftime("%d-%m-%Y %H:%M")
             })
             jamiqarz += i.weight * i.price - jamitulov
-            sanoq+=1
-            jamitulovlar+=jamitulov
+            sanoq += 1
+            jamitulovlar += jamitulov
         return JsonResponse({'data': data, 'jamiqarz': jamiqarz, 'jamitulov': jamitulovlar})
     client = Client.objects.filter(status_bozor=True, role='client').first()
-    incomes = IncomeClient.objects.filter(client=client, created_date__date = datetime.date.today())
+    incomes = IncomeClient.objects.filter(client=client, created_date__date=datetime.date.today())
     data = []
     sanoq = 1
     jamiqarz = 0
@@ -937,20 +965,21 @@ def qushxonastatisticsView(request):
     for i in incomes:
         jamitulov = sum([i.amount for i in ExpenseClient.objects.filter(income_client=i)])
         data.append({
-            'n':sanoq,
+            'n': sanoq,
             'product': i.product_dehqon.product.name,
             'quantity': i.quantity,
             'weight': i.weight,
             'price': i.price,
-            'jamisumma': i.weight*i.price,
+            'jamisumma': i.weight * i.price,
             'jamitulov': jamitulov,
-            'qarz': i.weight*i.price- jamitulov,
+            'qarz': i.weight * i.price - jamitulov,
             'date': i.created_date.strftime("%d-%m-%Y %H:%M")
         })
-        jamitulovlar+=jamitulov
-        jamiqarz+=i.weight*i.price- jamitulov
-        sanoq+=1
+        jamitulovlar += jamitulov
+        jamiqarz += i.weight * i.price - jamitulov
+        sanoq += 1
     return render(request, 'qushxonastatistics.html', {'data': data, 'jamiqarz': jamiqarz, 'jamitulov': jamitulovlar})
+
 
 @bozor_only
 def bozorstatisticsView(request):
@@ -959,7 +988,8 @@ def bozorstatisticsView(request):
         day = int(data['day'])
         jami_gush = 0
         jami_soni = 0
-        incomes = IncomeSotuvchi.objects.filter(created_date__gte= (datetime.datetime.now() - datetime.timedelta(days=day)))
+        incomes = IncomeSotuvchi.objects.filter(
+            created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=day)))
         sanoq = 1
         data = []
         jtulov = 0
@@ -976,18 +1006,18 @@ def bozorstatisticsView(request):
                 'price': i.price,
                 'jamitulov': jamitulov,
                 'jamisumma': i.price * i.weight,
-                'qarz': i.price*i.weight - jamitulov,
+                'qarz': i.price * i.weight - jamitulov,
                 'date': i.created_date.strftime("%d-%m-%Y %H:%M")
             })
             jami_gush += i.weight
             jami_soni += i.quantity
             jtulov += jamitulov
             jsumma += i.price * i.weight
-            sanoq+=1
-        return JsonResponse({'gush': jami_gush, 'jtulov': jtulov,'jsumma': jsumma , 'soni': jami_soni, 'data': data})
+            sanoq += 1
+        return JsonResponse({'gush': jami_gush, 'jtulov': jtulov, 'jsumma': jsumma, 'soni': jami_soni, 'data': data})
     jami_gush = 0
     jami_soni = 0
-    incomes = IncomeSotuvchi.objects.filter(created_date__date = datetime.datetime.today())
+    incomes = IncomeSotuvchi.objects.filter(created_date__date=datetime.datetime.today())
     sanoq = 1
     data = []
     jtulov = 0
@@ -1004,31 +1034,32 @@ def bozorstatisticsView(request):
             'price': i.price,
             'jamitulov': jamitulov,
             'jamisumma': i.price * i.weight,
-            'qarz': i.price*i.weight - jamitulov,
+            'qarz': i.price * i.weight - jamitulov,
             'date': i.created_date.strftime("%d-%m-%Y %H:%M")
         })
         jami_gush += i.weight
         jami_soni += i.quantity
-        jtulov +=jamitulov
-        jsumma += i.price *i.weight
-        sanoq+=1
+        jtulov += jamitulov
+        jsumma += i.price * i.weight
+        sanoq += 1
     return render(request, 'bozorstatistics.html',
-                  {'gush': jami_gush,'jtulov': jtulov,'jsumma': jsumma , 'soni': jami_soni, 'data': data})
+                  {'gush': jami_gush, 'jtulov': jtulov, 'jsumma': jsumma, 'soni': jami_soni, 'data': data})
+
 
 @bozor_only
 def bozorqarzView(request):
     sotuvchilar = Client.objects.filter(role='sotuvchi')
     data = []
-    sanoq=1
+    sanoq = 1
     for i in sotuvchilar:
-        incomes = IncomeSotuvchi.objects.filter(sotuvchi = i)
-        jamisumma = sum([j.weight*j.price for j in incomes])
+        incomes = IncomeSotuvchi.objects.filter(sotuvchi=i)
+        jamisumma = sum([j.weight * j.price for j in incomes])
         jamitulov = sum([j.amount for j in ExpenseSotuvchi.objects.filter(income_sotuvchi__sotuvchi=i)])
         data.append({
             'n': sanoq,
             'client': i.full_name,
             'id': i.id,
-            'qarz':jamisumma-jamitulov
+            'qarz': jamisumma - jamitulov
         })
-        sanoq+=1
+        sanoq += 1
     return render(request, 'bozorqarz.html', {'data': data})
