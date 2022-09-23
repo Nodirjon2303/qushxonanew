@@ -35,6 +35,7 @@ class Client(models.Model):
             self.status_bozor = False
             return ValidationError({"status_bozor": "Allaqachon Bozor uchun sotuvchi tanlangan\n"
                                                     "Bozor uchun sotuvchi faqat 1 kishi bo'lishi mumkin!!!"})
+        return super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = "Klient"
