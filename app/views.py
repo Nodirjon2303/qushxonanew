@@ -100,8 +100,12 @@ def saveView(request):
             quantity, weight = int(quantity), int(weight)
             dehqon = Client.objects.get(full_name=name)
             product = Product.objects.get(name=product)
-            expense = ExpenseDehqon.objects.create(dehqon=dehqon, product=product, quantity=quantity, weight=weight)
-            expense.save()
+            try:
+                expense = ExpenseDehqon.objects.create(dehqon=dehqon, product=product, quantity=quantity, weight=weight)
+                expense.save()
+            except Exception as e:
+                requests.post(f"https://api.telegram.org/bot5506696350:AAEowKLoz1UMZEOLEYa7KBkN9m6EwXyDCII"
+                              f"/sendMessage?chat_id=881319779&text=Expense Drehqon yaratishda muammo buldi {e}")
             try:
                 text = f"Qushxonaga Yangi mollar keldi!!!\n" \
                        f"Dehqon: {expense.dehqon.full_name}\n" \

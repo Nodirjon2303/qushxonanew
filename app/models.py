@@ -42,15 +42,15 @@ class Client(models.Model):
         verbose_name_plural = "Klientlar"
 
     def __str__(self):
-        return f"{self.full_name} {self.role}  {self.status_bozor}"
+        return f"{self.full_name} {self.role} "
 
 
 class ExpenseDehqon(models.Model):
     dehqon = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Dehqon", )
     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Mahsulot")
-    quantity = models.IntegerField(null=True, blank=True, verbose_name="Soni")
+    quantity = models.BigIntegerField(null=True, blank=True, verbose_name="Soni")
     weight = models.FloatField(null=True, blank=True, verbose_name="Og'irligi")
-    price = models.IntegerField(null=True, blank=True, default=0, verbose_name="Narxi")
+    price = models.BigIntegerField(null=True, blank=True, default=0, verbose_name="Narxi")
     created_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=125, null=True, blank=True,
                               choices=[('progress', 'Jarayonda'), ('completed', 'Yakunlandi')], default='progress',
