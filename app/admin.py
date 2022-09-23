@@ -23,4 +23,4 @@ class ClientAdmin(admin.ModelAdmin):
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['dehqon', 'product', 'created_date']
     search_fields = ['id', 'dehqon__full_name', 'product__name']
-    autocomplete_fields = ['dehqon', 'product']
+    autocomplete_fields = ['dehqon', ]
