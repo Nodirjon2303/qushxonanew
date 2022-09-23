@@ -22,4 +22,4 @@ class ClientAdmin(admin.ModelAdmin):
 @admin.register(ExpenseDehqon)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['dehqon', 'product', 'created_date']
-    search_fields = ['dehqon__full_name', 'product_name']
+    search_fields = ['id', 'dehqon__full_name', 'product__name']
