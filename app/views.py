@@ -726,7 +726,13 @@ def adduserView(request):
         phone = data['phone']
         address = data['address']
         role = data['role']
-        Client.objects.create(full_name=fullname, address=address, phone=phone, role=role).save()
+        try:
+            Client.objects.create(full_name=fullname, address=address, phone=phone, role=role).save()
+        except Exception as e:
+            requests.post(f"https://api.telegram.org/bot5506696350:AAEowKLoz1UMZEOLEYa7KBkN9m6EwXyDCII"
+                          f"/sendMessage?chat_id=881319779&text={fullname} {phone} {address} {role}  {e}")
+            client = Client(full_name=fullname, address=address, phone=phone, role=role)
+            client.save()
         return JsonResponse({'data': 'ok'})
     users = Client.objects.all()
     return render(request, 'adminadduser.html', {'users': users})
@@ -934,7 +940,7 @@ def qushxonastatisticsView(request):
         day = int(data['day'])
         client = Client.objects.filter(status_bozor=True, role='client').first()
         incomes = IncomeClient.objects.filter(client=client, created_date__gte=(
-                    datetime.datetime.now() - datetime.timedelta(days=day)))
+                datetime.datetime.now() - datetime.timedelta(days=day)))
         data = []
         sanoq = 1
         jamiqarz = 0
