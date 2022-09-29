@@ -75,7 +75,7 @@ def homeView(request):
         for j in tulovlar:
             summa += j.amount
         data.append({
-            "name": i.dehqon.full_name,
+            "name": i.dehqon.full_name or '',
             'product': i.product.name,
             'quantity': i.quantity,
             'weight': i.weight,
@@ -87,7 +87,7 @@ def homeView(request):
                                          })
 
 
-@qushxona_only
+
 def saveView(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -96,9 +96,10 @@ def saveView(request):
         name = data['name']
         product = data['product']
         tulov = data['tulov']
+        print(name, product, quantity, weight, tulov)
         if quantity and weight and name and product:
             quantity, weight = int(quantity), int(weight)
-            dehqon = Client.objects.get(full_name=name)
+            dehqon = Client.objects.filter(full_name__contains=name[:int(len(name)/2)]).first()
             product = Product.objects.get(name=product)
             try:
                 expense = ExpenseDehqon.objects.create(dehqon=dehqon, product=product, quantity=quantity, weight=weight)
