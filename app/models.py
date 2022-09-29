@@ -1,6 +1,7 @@
 import datetime
 
 import django
+import idna
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -60,7 +61,10 @@ class ExpenseDehqon(models.Model):
         verbose_name_plural = "Dehqonlarning xarajatlari"
 
     def __str__(self):
-        return f"{self.dehqon.full_name} {self.created_date}"
+        if self.dehqon:
+            return f"{self.dehqon.full_name} {self.created_date}"
+        else:
+            return f"{self.created_date}"
 
 
 class IncomeClient(models.Model):
@@ -107,10 +111,10 @@ class IncomeSotuvchi(models.Model):
 class IncomeDehqon(models.Model):
     dehqon_product = models.ForeignKey(ExpenseDehqon, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Dehqon mahsuloti")
     amount = models.IntegerField(null=True, blank=True, verbose_name="Miqdori")
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="Qabul qilib olingan sanasi")
     class Meta:
-        verbose_name = "Dehqon kirimi"
-        verbose_name_plural = "Dehqonlar kirimlari"
+        verbose_name = "Dehqonga to'langan pullar"
+        verbose_name_plural = "Dehqonlarga to'langan pullar"
     def __str__(self):
         if self.dehqon_product and self.dehqon_product.dehqon:
             return f"{self.dehqon_product.dehqon.full_name}   {self.amount}"
