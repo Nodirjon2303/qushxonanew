@@ -6,28 +6,33 @@ function Save_dehqon_data() {
     product = document.getElementById('product').value
     tulov = document.getElementById('tulov').value
     tulov = document.getElementById('tulov').value
-    var url = `/save/`
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        },
-        body: JSON.stringify({
-            'quantity': quantity,
-            'weight': weight,
-            'name': name,
-            'product': product,
-            'tulov': tulov
-        })
-    })
-        .then((response) => {
-            response.json().then((data) => {
-                location.reload()
+    if (quantity && weight && name && product) {
+        var url = `/save/`
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'quantity': quantity,
+                'weight': weight,
+                'name': name,
+                'product': product,
+                'tulov': tulov
             })
-
-
         })
+            .then((response) => {
+                response.json().then((data) => {
+                    location.reload()
+                })
+
+
+            })
+    }
+    else {
+        alert("Hamma polyalarni to'ldirmadingiz")
+    }
 }
 
 
