@@ -8,18 +8,17 @@
 
 
 
-<div class="limiter">
-   
-    
-    <div class="container-table100">
-        <div class="wrap-table100">
+    <div class="limiter">
 
-            
 
-            <div class="table100 ver1 m-b-110">
-                <div class=" table100-head">
-                    <table >
-                        <thead>
+        <div class="container-table100">
+            <div class="wrap-table100">
+
+
+                <div class="table100 ver1 m-b-110">
+                    <div class=" table100-head">
+                        <table>
+                            <thead>
                             <tr class="row100 head">
                                 <th class="cell100 column1">Mijoz</th>
                                 <th class="cell100 column1">Dehqon</th>
@@ -30,49 +29,51 @@
                                 <th class="cell100 column1">Vaqti</th>
                             </tr>
 
-                        </thead>
-                        
-                    </table>
-                </div>
+                            </thead>
+
+                        </table>
+                    </div>
 
 
+                    <div class="table100-body js-pscroll">
 
-                <div class="table100-body js-pscroll">
-                    
-                    <table id="qushxona_table">
-                        
-                        <tbody>
+                        <table id="qushxona_table">
+
+                            <tbody>
                             {% for i in data %}
-                        
-                            <tr >
-                                <td class="cell100 column1"><a href="{% url 'clientPageView' i.id %}">{{ i.client}}</a></td>
-                                <td class="cell100 column1">{{ i.dehqon }}</td>
-                                <td class="cell100 column1">{{ i.weight }}</td>
-                                <td class="cell100 column1">{{ i.price }}</td>
-                                <td class="cell100 column1">{{ i.quantity }}</td>
-                                <td class="cell100 column1">{{ i.total_price }}</td>
-                                <td class="cell100 column1">{{ i.created_data }}</td>
-                            </tr>
+
+                                <tr>
+                                    <td class="cell100 column1"><a
+                                            href="{% url 'clientPageView' i.id %}">{{ i.client }}</a></td>
+                                    <td class="cell100 column1">{{ i.dehqon }}</td>
+                                    <td class="cell100 column1">{{ i.weight }}</td>
+                                    <td class="cell100 column1">{{ i.price }}</td>
+                                    <td class="cell100 column1">{{ i.quantity }}</td>
+                                    <td class="cell100 column1">{{ i.total_price }}</td>
+                                    <td class="cell100 column1">{{ i.created_data }}</td>
+                                </tr>
                             {% endfor %}
                             <tr id="add_income">
 
                             </tr>
-                        
-                        </tbody>
-                        
-                    </table>
 
-                    
-            <button id="addbutton" class="button_save" onclick="add_income()">+Add</button>
-                    
+                            </tbody>
+
+                        </table>
+
+                        <div id="addbutton_div" style="height: 40px" onclick="add_income()">
+                            <button id="addbutton" class="button_save" style="height: 40px; font-size: 25px">Klientlarga
+                                mahsulot sotish
+                            </button>
+                        </div>
+
+                    </div>
 
                 </div>
-                        
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
 
 
 
@@ -88,7 +89,7 @@
 
 
 
-<!-- 
+    <!--
 
 <div class="qushxona__table1">
     <table class="qushxona_table">

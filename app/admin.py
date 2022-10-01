@@ -1,10 +1,11 @@
 from django.contrib import admin
+
 from .models import *
 
 # Register your models here.
-admin.site.register(Product)
+# admin.site.register(Product)
 admin.site.register(IncomeClient)
-admin.site.register(IncomeDehqon)
+# admin.site.register(IncomeDehqon)
 admin.site.register(IncomeSotuvchi)
 # admin.site.register(ExpenseDehqon)
 admin.site.register(ExpenseSotuvchi)
@@ -17,6 +18,16 @@ admin.site.register(Teri)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'phone', 'role', 'status_bozor']
     search_fields = ['full_name', 'phone']
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name',]
+    search_fields = ['name']
+
+@admin.register(IncomeDehqon)
+class IncomeDehqonAdmin(admin.ModelAdmin):
+    list_display = ['dehqon_product', 'amount', 'created_date']
+    search_fields = ['dehqon_product__dehqon__full_name', ]
 
 
 @admin.register(ExpenseDehqon)

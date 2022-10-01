@@ -1,12 +1,12 @@
 function Save_dehqon_data() {
-
+    document.getElementById('addbutton_div').style.display = 'none'
     quantity = document.getElementById('quantity').value
     weight = document.getElementById('weight').value
-    name = document.getElementById('name').value
+    dehqon_id = document.getElementById('dehqon_id_select').value
     product = document.getElementById('product').value
     tulov = document.getElementById('tulov').value
-    tulov = document.getElementById('tulov').value
-    if (quantity && weight && name && product) {
+
+    if (quantity && weight && dehqon_id && product) {
         var url = `/save/`
         fetch(url, {
             method: 'POST',
@@ -17,7 +17,7 @@ function Save_dehqon_data() {
             body: JSON.stringify({
                 'quantity': quantity,
                 'weight': weight,
-                'name': name,
+                'dehqon_id': dehqon_id,
                 'product': product,
                 'tulov': tulov
             })
@@ -29,15 +29,15 @@ function Save_dehqon_data() {
 
 
             })
-    }
-    else {
+    } else {
         alert("Hamma polyalarni to'ldirmadingiz")
+        document.getElementById('addbutton_div').style.display = 'block'
     }
 }
 
 
-function add_dehqon_column() {
-    if (document.getElementById('addbutton').innerHTML == '+Add') {
+function add_dehqon_column(column = true) {
+    if (column) {
         var url = ``
         fetch(url, {
             method: 'POST',
@@ -52,9 +52,9 @@ function add_dehqon_column() {
                     datas = data['data']
                     datap = data['product']
                     HTML = `
-<td><select name="ism" id="name">`
+<td><select name="ism" id="dehqon_id_select">`
                     for (i = 0; i < datas.length; i++) {
-                        HTML += `<option>${datas[i].name}</option>`
+                        HTML += `<option value="${datas[i].id}">${datas[i].name}</option>`
                     }
                     HTML += `</select></td>
 <td><select name="mahsulot" id="product">`
@@ -68,12 +68,14 @@ function add_dehqon_column() {
 <td><input id="tulov" type="number"></td>
 `
                     document.getElementById('add_kirim').innerHTML = HTML
-                    document.getElementById('addbutton').innerHTML = 'Save'
+                    document.getElementById('addbutton').innerHTML = 'Saqlash'
+                    document.getElementById('addbutton').setAttribute('onclick', 'Save_dehqon_data()')
                 })
 
 
             })
     } else {
+        document.getElementById('addbutton_div').style.display = 'none'
         Save_dehqon_data()
     }
 
@@ -84,7 +86,8 @@ function save_income() {
     price = document.getElementById('price').value
     dehqon = document.getElementById('dehqon').value
     mijoz = document.getElementById('mijoz').value
-    if (parseInt(price)>10000) {
+    document.getElementById('addbutton_div').style.display = 'none'
+    if (parseInt(price) > 10000) {
         if (weight && price && dehqon && mijoz) {
             var url = `/saveincome/`
             fetch(url, {
@@ -106,7 +109,13 @@ function save_income() {
                         if (data['data'] == 'ok') {
                             location.reload()
                         } else {
-                            document.getElementById('addstatus').innerHTML = '<p>Siz Bron qilingan sondan oqtiqcha kiritdingiz<br>Iltimos tekshirib qayta harakat qiling</p>'
+                            // alert without clearing input fields only alerting
+                            alert("Siz bron qilingan mahsulotdan ortiqcha kiritdingiz")
+                            document.getElementById("weight").value = weight;
+                            document.getElementById("price").value = price;
+                            document.getElementById("mijoz").value = mijoz;
+                            document.getElementById("dehqon").value = dehqon;
+                            document.getElementById('addbutton_div').style.display = 'block'
                         }
 
                     })
@@ -114,14 +123,21 @@ function save_income() {
 
                 })
         } else {
-            document.getElementById('addstatus').innerHTML = "Siz malumotlarni hali to'liq to'ldirmagansiz"
+            alert("Siz malumotlarni hali to'liq to'ldirmagansiz")
+            document.getElementById('addbutton_div').style.display = 'block'
         }
+
+    }
+    else {
+        alert("Siz narxni 10000 dan kam kiritdingiz")
+        document.getElementById('addbutton_div').style.display = 'block'
 
     }
 }
 
 function mijozchange() {
     mijoz = document.getElementById('mijoz').value;
+    console.log(mijoz)
     var url = `/mijozchange/`
     fetch(url, {
         method: 'POST',
@@ -150,46 +166,41 @@ function mijozchange() {
 
 
 function add_income() {
-    if (document.getElementById('addbutton').innerHTML == '+Add') {
-        var url = `/incomeclient/`
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({})
-        })
-            .then((response) => {
-                response.json().then((data) => {
-                    datam = data['mijoz']
-                    datad = data['dehqon']
-                    datap = data['product']
-                    HTML = `
+    var url = `/incomeclient/`
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({})
+    })
+        .then((response) => {
+            response.json().then((data) => {
+                datam = data['mijoz']
+                datad = data['dehqon']
+                HTML = `
 <td><select onchange="mijozchange()" name="mijoz" id="mijoz">`
-                    for (i = 0; i < datam.length; i++) {
-                        HTML += `<option>${datam[i].name}</option>`
-                    }
-                    HTML += `</select></td>`
-                    HTML += `<td><select name="dehqon" id="dehqon">`
-                    for (i = 0; i < datad.length; i++) {
-                        HTML += `<option value="${datad[i].id}">${datad[i].name}</option>`
-                    }
-                    HTML += `</td>
+                for (i = 0; i < datam.length; i++) {
+                    HTML += `<option value="${datam[i].id}">${datam[i].name}</option>`
+                }
+                HTML += `</select></td>`
+                HTML += `<td><select name="dehqon" id="dehqon">`
+                for (i = 0; i < datad.length; i++) {
+                    HTML += `<option value="${datad[i].id}">${datad[i].name}</option>`
+                }
+                HTML += `</td>
 <td><input id="weight" type="text"></td>
 <td><input id="price" type="number"></td>
 <!--<td><input id="tulov" type="number"></td>-->
 `
-                    document.getElementById('add_income').innerHTML = HTML
-                    document.getElementById('addbutton').innerHTML = 'Save'
-                })
-
-
+                document.getElementById('add_income').innerHTML = HTML
+                document.getElementById('addbutton').innerHTML = 'Saqlash'
+                document.getElementById('addbutton').setAttribute('onclick', 'save_income()')
             })
-    } else {
-        save_income()
-        document.getElementById('addbutton').innerHTML = `Save`
-    }
+
+
+        })
 }
 
 
@@ -197,6 +208,7 @@ function save_bron() {
     mijoz = document.getElementById('mijoz').value
     dehqon = document.getElementById('dehqon').value
     soni = document.getElementById('soni').value
+    document.getElementById('addbutton_div').style.display = 'none'
     if (mijoz && dehqon && soni) {
         var url = `/chiqim/`
         fetch(url, {
@@ -216,7 +228,8 @@ function save_bron() {
                     if (data['data'] == 'ok') {
                         location.reload()
                     } else {
-                        document.getElementById('addbron').innerHTML = `Siz mavjud bo'lganidan katta qiymat kiritdingiz`
+                        alert(`Siz mavjud bo'lganidan katta qiymat kiritdingiz`)
+                        document.getElementById("addbutton_div").style.display = "block";
                     }
                 })
 
@@ -230,7 +243,6 @@ function save_bron() {
 }
 
 function add_bron() {
-    if (document.getElementById('addbutton').innerHTML == '+Add') {
         var url = `/bron/`
         fetch(url, {
             method: 'POST',
@@ -259,15 +271,13 @@ function add_bron() {
 <!--<td><button>Save</button></td>-->
 `
                     document.getElementById('add_income').innerHTML = HTML
-                    document.getElementById('addbutton').innerHTML = 'Save'
+                    document.getElementById('addbutton').innerHTML = 'Saqlash'
+                    document.getElementById('addbutton').setAttribute('onclick', 'save_bron()')
                 })
 
 
             })
-    } else {
-        save_bron()
-        document.getElementById('addbutton').innerHTML = `Save`
-    }
+
 }
 
 function payment_client_save(id) {
@@ -751,7 +761,7 @@ function qushxonadaychange() {
                 <th>Sanasi</th>
             </tr>`
                 for (i = 0; i < datas.length; i++) {
-                        html+=`
+                    html += `
                         <tr>
                     <td>${datas[i].n}</td>
                     <td>${datas[i].product}</td>
@@ -777,7 +787,7 @@ function qushxonadaychange() {
 
 }
 
-function searchbox(){
+function searchbox() {
     inputdata = document.getElementById('searchperson').value
     // console.log(inputdata)
     var url = `/searchbox/`
@@ -793,23 +803,22 @@ function searchbox(){
     })
         .then((response) => {
             response.json().then((data) => {
-            // console.log(data)
-            data = data['data']
-            html = ``
-            for (i=0;i<data.length;i++){
-                if (data[i].role == 'dehqon') {
-                    html += `
+                // console.log(data)
+                data = data['data']
+                html = ``
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].role == 'dehqon') {
+                        html += `
                 <a onclick="document.location.href = '/dehqon/${data[i].id}'" class="w3-xlarge" style="color: red; background-color: yellow;font-family: 'Allerta Stencil', Sans-serif; " href="#" >${data[i].full_name}</a><br>
                 `
-                }
-                else{
-                     html += `
+                    } else {
+                        html += `
                 <a onclick="document.location.href = '/client/${data[i].id}'" class="w3-xlarge" style="color: red; background-color: yellow;font-family: 'Allerta Stencil', Sans-serif; " href="#" >${data[i].full_name}</a><br>
                 `
+                    }
                 }
-            }
 
-            document.getElementById('search_results').innerHTML = html
+                document.getElementById('search_results').innerHTML = html
 
             })
 
@@ -820,10 +829,9 @@ function searchbox(){
 }
 
 
-
-function bozordaychange(){
+function bozordaychange() {
     day = document.getElementById('bozorday').value;
-    if (day == '1'){
+    if (day == '1') {
         location.reload();
     }
 
@@ -853,8 +861,8 @@ function bozordaychange(){
                 <th>Qarz</th>
                 <th>Sanasi</th>
             </tr>`
-                for (i=0; i<datas.length;i++){
-                    html+=`
+                for (i = 0; i < datas.length; i++) {
+                    html += `
                     <tr>
                 <td>${datas[i].n}</td>
                 <td><a href="/sotuvchi/${datas[i].id}">${datas[i].sotuvchi}</a></td>
@@ -870,7 +878,7 @@ function bozordaychange(){
                     `
                 }
 
-                document.getElementById('qushxona_table').innerHTML=html
+                document.getElementById('qushxona_table').innerHTML = html
                 document.getElementById('jamisi').innerHTML = `Jami kg: ${data['gush']}      Jami soni: ${data['soni']}
         <br>
         Jami Summa: ${data['jsumma']}   Jami Tulov: ${data['jtulov']}`
@@ -883,29 +891,28 @@ function bozordaychange(){
 }
 
 
-
 (function ($) {
-	"use strict";
-	$('.column100').on('mouseover',function(){
-		var table1 = $(this).parent().parent().parent();
-		var table2 = $(this).parent().parent();
-		var verTable = $(table1).data('vertable')+"";
-		var column = $(this).data('column') + ""; 
+    "use strict";
+    $('.column100').on('mouseover', function () {
+        var table1 = $(this).parent().parent().parent();
+        var table2 = $(this).parent().parent();
+        var verTable = $(table1).data('vertable') + "";
+        var column = $(this).data('column') + "";
 
-		$(table2).find("."+column).addClass('hov-column-'+ verTable);
-		$(table1).find(".row100.head ."+column).addClass('hov-column-head-'+ verTable);
-	});
+        $(table2).find("." + column).addClass('hov-column-' + verTable);
+        $(table1).find(".row100.head ." + column).addClass('hov-column-head-' + verTable);
+    });
 
-	$('.column100').on('mouseout',function(){
-		var table1 = $(this).parent().parent().parent();
-		var table2 = $(this).parent().parent();
-		var verTable = $(table1).data('vertable')+"";
-		var column = $(this).data('column') + ""; 
+    $('.column100').on('mouseout', function () {
+        var table1 = $(this).parent().parent().parent();
+        var table2 = $(this).parent().parent();
+        var verTable = $(table1).data('vertable') + "";
+        var column = $(this).data('column') + "";
 
-		$(table2).find("."+column).removeClass('hov-column-'+ verTable);
-		$(table1).find(".row100.head ."+column).removeClass('hov-column-head-'+ verTable);
-	});
-    
+        $(table2).find("." + column).removeClass('hov-column-' + verTable);
+        $(table1).find(".row100.head ." + column).removeClass('hov-column-head-' + verTable);
+    });
+
 
 })(jQuery);
 

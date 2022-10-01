@@ -31,4 +31,5 @@ urlpatterns = [
     path('bozorstatistic/', bozorstatisticsView, name = 'bozorstatistik'),
     path('bozorqarz/', bozorqarzView, name='bozorallqarz'),
     path('searchbox/', SearchboxView, name='searchbox'),
+    path('logout/', logoutView, name='logout'),
 ]

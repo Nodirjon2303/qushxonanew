@@ -326,7 +326,7 @@ th, td {
 
 .table100.ver1 th {
   font-family: Lato-Bold;
-  font-size: 18px;
+  font-size: 25px;
   color: #fff;
   line-height: 1.4;
 
@@ -335,7 +335,7 @@ th, td {
 
 .table100.ver1 td {
   font-family: Lato-Regular;
-  font-size: 15px;
+  font-size: 20px;
   color: #808080;
   line-height: 1.4;
 }
@@ -641,4 +641,16 @@ th, td {
   color: white;
 }
 
+
+/*give font-size 20 px all a tags*/
+a{
+  font-size: 30px;
+}
+
+/*give 20 px all texts */
+button{
+  font-size: 20px;
+}
+
+/*give all td tags font-size 30 px*/
 
