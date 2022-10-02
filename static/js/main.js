@@ -63,9 +63,9 @@ function add_dehqon_column(column = true) {
                     }
 
                     HTML += `</select></td>
-<td><input id="quantity" type="number"></td>
-<td><input id="weight" type="number"></td>
-<td><input id="tulov" type="number"></td>
+<td><input id="quantity" type="number" placeholder="sonini kiriting"></td>
+<td><input id="weight" type="number" placeholder="Taxminiy massasini kiriting"></td>
+<td><input id="tulov" type="number" placeholder="To'lov miqdorini kiriting"></td>
 `
                     document.getElementById('add_kirim').innerHTML = HTML
                     document.getElementById('addbutton').innerHTML = 'Saqlash'
@@ -190,8 +190,8 @@ function add_income() {
                     HTML += `<option value="${datad[i].id}">${datad[i].name}</option>`
                 }
                 HTML += `</td>
-<td><input id="weight" type="text"></td>
-<td><input id="price" type="number"></td>
+<td><input id="weight" type="text" placeholder="35+45+55+65"></td>
+<td><input id="price" type="number" placeholder="1kg narxini kiriting"></td>
 <!--<td><input id="tulov" type="number"></td>-->
 `
                 document.getElementById('add_income').innerHTML = HTML
@@ -267,7 +267,7 @@ function add_bron() {
                         HTML += `<option value="${datap[i].id}">${datap[i].name}</option>`
                     }
                     HTML += `</td>
-<td><input id="soni" type="number"></td>
+<td><input id="soni" type="number" placeholder="miqdorini sonlar bilan kiriting"></td>
 <!--<td><button>Save</button></td>-->
 `
                     document.getElementById('add_income').innerHTML = HTML
@@ -363,7 +363,7 @@ function payments(dat, dehqon, product, soni, id, qarz) {
     html += `
     <tr>
     <td>${sanoq}</td>
-    <td><input id="payment_miqdor" type="number"></td>
+    <td><input id="payment_miqdor" type="number" placeholder="to'lov miqdorini kiriting"></td>
     <td><button onclick="payment_client_save(${id})">Save</button></td>
 </tr></table>
     `
@@ -400,8 +400,8 @@ function payments_sotuvchi(dat, dehqon, product, soni, id, qarz) {
     html += `
     <tr>
     <td>${sanoq}</td>
-    <td><input id="payment_miqdor" type="number"></td>
-    <td><button onclick="payment_client_save_sotuv(${id})">Save</button></td>
+    <td><input id="payment_miqdor" type="number" placeholder="to'lov miqdorini kiriting"></td>
+    <td><button onclick="payment_client_save_sotuv(${id})">Saqlash</button></td>
 </tr>
     `
     document.getElementById('information').innerHTML = `<h1>${dehqon} ning ${soni}ta ${product}i  uchun To'lovlar</h1> <br> Qarz miqdori: <b>${qarz}</b>`
