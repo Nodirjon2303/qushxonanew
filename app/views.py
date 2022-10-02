@@ -638,7 +638,7 @@ def adminkirimView(request):
         datab = []
         if type == 'kirim':
             kirimlar = ExpenseClient.objects.filter(
-                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days)))
+                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days))).select_related('income_client__client')
             for i in kirimlar:
                 data.append({
                     'dehqon': i.income_client.client.full_name,
@@ -651,7 +651,7 @@ def adminkirimView(request):
 
         elif type == 'chiqim':
             chiqimlar = IncomeDehqon.objects.filter(
-                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days)))
+                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days))).select_related('dehqon_product__dehqon')
             for i in chiqimlar:
                 data.append({
                     'dehqon': i.dehqon_product.dehqon.full_name,
@@ -675,7 +675,7 @@ def adminkirimView(request):
                 sanoq += 1
 
         return JsonResponse({'data': data, 'jami': Jami, 'datab': datab})
-    kirimlar = ExpenseClient.objects.filter(created_date__date=datetime.date.today())
+    kirimlar = ExpenseClient.objects.filter(created_date__date=datetime.date.today()).select_related('income_client__client')
     sanoq = 1
     Jami = 0
     data = []
@@ -693,7 +693,7 @@ def adminkirimView(request):
 
 @admin_only
 def adminchiqimView(request):
-    chiqimlar = IncomeDehqon.objects.filter(created_date__date=datetime.date.today())
+    chiqimlar = IncomeDehqon.objects.filter(created_date__date=datetime.date.today()).select_related('dehqon_product__dehqon')
     data = []
     sanoq = 1
     Jami = 0
@@ -952,8 +952,9 @@ def qushxonastatisticsView(request):
         sanoq = 1
         jamiqarz = 0
         jamitulovlar = 0
+        all_expense_clients = ExpenseClient.objects.filter(income_client_id__in=[i.id for i in incomes])
         for i in incomes:
-            jamitulov = sum([i.amount for i in ExpenseClient.objects.filter(income_client=i)])
+            jamitulov = sum([i.amount for i in [k for k in all_expense_clients if k.income_client_id == i.id]])
             data.append({
                 'n': sanoq,
                 'product': i.product_dehqon.product.name,
