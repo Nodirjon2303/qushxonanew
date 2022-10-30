@@ -843,7 +843,7 @@ def bozorchiqimView(request):
         })
         jami_gush += i.weight
         jami_soni += i.quantity
-    sotuvchilar = Client.objects.filter(role='sotuvchi')
+    sotuvchilar = Client.objects.filter(role='sotuvchi').order_by('full_name')
     products = Product.objects.all()
     datam = []
     jamiqolganson = 0
