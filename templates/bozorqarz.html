@@ -36,7 +36,7 @@
                             {% for i in data %}
                         
                             <tr >
-                                <td class="cell100 column1">{{ i.n }}</td>
+                                <td class="cell100 column1">{{ forloop.counter }}</td>
                                 <td><a href="{% url 'sotuvchi' i.id %}">{{ i.client }}</a></td>
                                 <td class="cell100 column1">{{ i.qarz }}</td>
                        
@@ -88,7 +88,7 @@
             </tr>
             {% for i in data %}
             <tr>
-                <td>{{ i.sanoq }}</td>
+                <td>{{ i.forloop.counter }}</td>
                 <td><a href="{% url 'sotuvchi' i.id %}">{{ i.client }}</a></td>
                 <td>{{ i.qarz }}</td>
             </tr>

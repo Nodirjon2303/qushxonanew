@@ -638,7 +638,8 @@ def adminkirimView(request):
         datab = []
         if type == 'kirim':
             kirimlar = ExpenseClient.objects.filter(
-                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days))).select_related('income_client__client')
+                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days))).select_related(
+                'income_client__client')
             for i in kirimlar:
                 data.append({
                     'dehqon': i.income_client.client.full_name,
@@ -651,7 +652,8 @@ def adminkirimView(request):
 
         elif type == 'chiqim':
             chiqimlar = IncomeDehqon.objects.filter(
-                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days))).select_related('dehqon_product__dehqon')
+                created_date__gte=(datetime.datetime.now() - datetime.timedelta(days=days))).select_related(
+                'dehqon_product__dehqon')
             for i in chiqimlar:
                 data.append({
                     'dehqon': i.dehqon_product.dehqon.full_name,
@@ -675,7 +677,8 @@ def adminkirimView(request):
                 sanoq += 1
 
         return JsonResponse({'data': data, 'jami': Jami, 'datab': datab})
-    kirimlar = ExpenseClient.objects.filter(created_date__date=datetime.date.today()).select_related('income_client__client')
+    kirimlar = ExpenseClient.objects.filter(created_date__date=datetime.date.today()).select_related(
+        'income_client__client')
     sanoq = 1
     Jami = 0
     data = []
@@ -693,7 +696,8 @@ def adminkirimView(request):
 
 @admin_only
 def adminchiqimView(request):
-    chiqimlar = IncomeDehqon.objects.filter(created_date__date=datetime.date.today()).select_related('dehqon_product__dehqon')
+    chiqimlar = IncomeDehqon.objects.filter(created_date__date=datetime.date.today()).select_related(
+        'dehqon_product__dehqon')
     data = []
     sanoq = 1
     Jami = 0
@@ -849,7 +853,8 @@ def bozorchiqimView(request):
     jamiqolganson = 0
     jamiogirlik = 0
     all_income_sotuvchi = IncomeSotuvchi.objects.filter(product_id__in=[i.id for i in products])
-    all_income_clients = IncomeClient.objects.filter(~Q(status='bron'), client_id=client.id).select_related('product_dehqon__product')
+    all_income_clients = IncomeClient.objects.filter(~Q(status='bron'), client_id=client.id).select_related(
+        'product_dehqon__product')
     for i in products:
         incomes = [k for k in all_income_clients if k.product_dehqon.product_id == i.id]
         soni = sum([i.quantity for i in incomes])
@@ -971,7 +976,8 @@ def qushxonastatisticsView(request):
             jamitulovlar += jamitulov
         return JsonResponse({'data': data, 'jamiqarz': jamiqarz, 'jamitulov': jamitulovlar})
     client = Client.objects.filter(status_bozor=True, role='client').first()
-    incomes = IncomeClient.objects.filter(client=client, created_date__date=datetime.date.today()).select_related('product_dehqon__product')
+    incomes = IncomeClient.objects.filter(client=client, created_date__date=datetime.date.today()).select_related(
+        'product_dehqon__product')
     data = []
     sanoq = 1
     jamiqarz = 0
@@ -1080,6 +1086,10 @@ def bozorqarzView(request):
             'qarz': jamisumma - jamitulov
         })
         sanoq += 1
+    data = [i for i in data if i['qarz'] > 0]
+    def sort_function(i):
+        return i['qarz']
+    data.sort(key=sort_function,reverse=True)
     return render(request, 'bozorqarz.html', {'data': data})
 
 
