@@ -158,8 +158,8 @@ class IncomeBazarOther(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Bozor to'lovi"
-        verbose_name_plural = "Bozor to'lovlari"
+        verbose_name = "Bozordan ichki mahsulotlar"
+        verbose_name_plural = "Bozor ichki mahsulot"
         ordering = ['-created_date']
 
     def __str__(self):
