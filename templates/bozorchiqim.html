@@ -11,7 +11,7 @@
        
         <div class="container-table100">
             <div class="wrap-table100">
-    <div style="color: rgb(11, 202, 37);">
+    <div style="color: rgb(11, 202, 37); background-color: #f7f7f7; display: inline-block" >
                 Jami qolgan soni : {{ bazadaqolganson }}    <br>
                 Jami kg: {{ qolganogirlik }}
             </div>
@@ -22,12 +22,13 @@
                             <thead>
                                 <tr class="row100 head">
                                     <th class="cell100 column1">№</th>
-                                    <th class="cell100 column1">Sotuvchi</th>
+                                    <th class="cell100 column1">Mijoz</th>
                                     <th class="cell100 column1">Mahsulot</th>
                                     <th class="cell100 column1">Og'irligi</th>
                                     <th class="cell100 column1">Narxi</th>
                                     <th class="cell100 column1">To'lov</th>
                                     <th class="cell100 column1">Soni</th>
+                                    <th class="cell100 column1">Jami</th>
                                     <th class="cell100 column1">Sanasi</th>
 
                                 </tr>
@@ -53,6 +54,7 @@
                                     <td class="cell100 column1">{{ i.price }}</td>
                                     <td class="cell100 column1">{{ i.tulov }}</td>
                                     <td class="cell100 column1">{{ i.soni }}</td>
+                                    <td class="cell100 column1">{{ i.jami_summa }}</td>
                                     <td class="cell100 column1">{{ i.date }}</td>
                                 </tr>
                                 {% endfor %}
@@ -87,9 +89,9 @@
                             
                 </div>
     
-                <div id="jamisi" class="jami_qarz">
+                <div id="jamisi" class="jami_qarz" style="background-color: #f7f7f7; display: inline-block">
                 
-                    <p style="color: red; text-align: center">
+                    <p style="color: red; text-align: center; background-color: #f7f7f7">
                         Jami kg: {{ gush }}<br>
                         Jami soni: {{ soni }}
                     </p>

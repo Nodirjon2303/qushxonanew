@@ -669,8 +669,10 @@ function usersave() {
 }
 
 function expensesave(type) {
+    console.log(type, 'keldi')
     comment = document.getElementById('comment').value;
     amount = document.getElementById('amount').value;
+    console.log(comment, amount)
     var url = `/boshqa/`
     fetch(url, {
         method: 'POST',
@@ -692,6 +694,7 @@ function expensesave(type) {
 
 
         })
+
 
 
 }

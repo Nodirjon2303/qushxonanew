@@ -57,8 +57,8 @@ class ExpenseDehqon(models.Model):
                               choices=[('progress', 'Jarayonda'), ('completed', 'Yakunlandi')], default='progress',
                               verbose_name="Holati")
     class Meta:
-        verbose_name = "Dehqonning xarajati"
-        verbose_name_plural = "Dehqonlarning xarajatlari"
+        verbose_name = "Dehqonlardan kelgan mol"
+        verbose_name_plural = "Dehqonlarning kelgan mollar"
 
     def __str__(self):
         if self.dehqon:
@@ -80,8 +80,8 @@ class IncomeClient(models.Model):
                               choices=[('bron', 'Bron qilindi'), ('progress', 'Jarayonda'),
                                        ('completed', 'Yakunlandi')], default='progress')
     class Meta:
-        verbose_name = "Klient kirimi"
-        verbose_name_plural = "Klientlarning kirimlari"
+        verbose_name = "Qushxona klienti sotib olgan mahsuloti"
+        verbose_name_plural = "Qushxona klienti sotib olgan mahsulolari"
     def __str__(self):
         title = ""
         if self.client:
@@ -102,8 +102,8 @@ class IncomeSotuvchi(models.Model):
     status = models.CharField(max_length=88, null=True, blank=True,
                               choices=[("progress", "Jarayonda"), ("completed", "yakunlandi")], default='progress', verbose_name="Holati")
     class Meta:
-        verbose_name = "Sotuvchi kirimi"
-        verbose_name_plural = "Sotuvchilar kirimlari"
+        verbose_name = "Bozor sotuvchi sotib olgan mahsuloti"
+        verbose_name_plural = "Bozor sotuvchilari sotib olgan mahsulolari"
     def __str__(self):
         return f"{self.sotuvchi} {self.product} {self.created_date.ctime()}"
 
@@ -128,8 +128,8 @@ class ExpenseClient(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Klient chiqimi"
-        verbose_name_plural = "Klientlar chiqimlari"
+        verbose_name = "Klient to'lovi"
+        verbose_name_plural = "Klientlar to'lovlari"
 
     def __str__(self):
         return f"{self.income_client.client.full_name}  {self.amount}  {self.created_date}"
@@ -141,8 +141,8 @@ class ExpenseSotuvchi(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Sana")
 
     class Meta:
-        verbose_name = "Sotuvchi chiqimi"
-        verbose_name_plural = "Sotuvchilar chiqimlari"
+        verbose_name = "Bozor sotuvchilari to'lovi"
+        verbose_name_plural = "Bozor sotuvchilari to'lovlari"
     def __str__(self):
         return f"{self.income_sotuvchi.sotuvchi.full_name}  {self.amount}  {self.created_date}"
 
@@ -178,7 +178,7 @@ class Xarajat(models.Model):
                               choices=[("qushxona", "Qushxona uchun xarajat"), ('bozor', 'bozordagi xarajatlar')], verbose_name="Xarajat turi")
 
     class Meta:
-        verbose_name = "Xarajat"
-        verbose_name_plural = "Xarajatlar"
+        verbose_name = "Boshqa Xarajat"
+        verbose_name_plural = "Boshqa Xarajatlar"
     def __str__(self):
         return self.comment

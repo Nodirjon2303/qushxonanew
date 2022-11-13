@@ -777,7 +777,7 @@ def otherexpenseView(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         comment = data['comment']
-        amount = data['amount']
+        amount = int(data['amount'])
         type = data['type']
         Xarajat.objects.create(comment=comment, amount=amount, choise=type).save()
         return JsonResponse({'data': 'ok'})
@@ -842,6 +842,7 @@ def bozorchiqimView(request):
             "ogirligi": i.weight,
             'soni': i.quantity,
             'price': i.price,
+            'jami_summa': int(i.weight * i.price),
             'tulov': sum([j.amount for j in [k for k in all_expense_sotuvchi if k.income_sotuvchi_id == i.id]]),
             'date': i.created_date.strftime("%d-%m-%Y %H:%M")
         })
@@ -860,8 +861,8 @@ def bozorchiqimView(request):
         soni = sum([i.quantity for i in incomes])
         ogirligi = sum([i.weight for i in incomes])
 
-        sotilganlari = sum([i.quantity for i in [k for k in all_income_sotuvchi if k.product_id == i.id]])
-        sotogirlik = sum([i.weight for i in [k for k in all_income_sotuvchi if k.product_id == i.id]])
+        sotilganlari = int(sum([i.quantity for i in [k for k in all_income_sotuvchi if k.product_id == i.id]]))
+        sotogirlik = int(sum([i.weight for i in [k for k in all_income_sotuvchi if k.product_id == i.id]]))
         if soni > sotilganlari:
             datam.append(
                 {'name': i.name,
@@ -872,7 +873,7 @@ def bozorchiqimView(request):
         jamiogirlik += (ogirligi - sotogirlik)
 
     return render(request, 'bozorchiqim.html',
-                  {'gush': jami_gush, 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar, 'mahsulotlar': datam,
+                  {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar, 'mahsulotlar': datam,
                    'bazadaqolganson': jamiqolganson, 'qolganogirlik': jamiogirlik})
 
 

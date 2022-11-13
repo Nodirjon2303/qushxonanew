@@ -12,6 +12,7 @@ admin.site.register(ExpenseSotuvchi)
 admin.site.register(ExpenseClient)
 admin.site.register(KallaHasb)
 admin.site.register(Teri)
+admin.site.register(Xarajat)
 
 
 @admin.register(Client)
