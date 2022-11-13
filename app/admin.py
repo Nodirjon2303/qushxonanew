@@ -36,3 +36,12 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ['dehqon', 'product', 'created_date']
     search_fields = ['id', 'dehqon__full_name', 'product__name']
     autocomplete_fields = ['dehqon', ]
+
+@admin.register(IncomeBazarOther)
+class IncomeBazarOtherAdmin(admin.ModelAdmin):
+    list_display = ['product', 'weight', 'created_date']
+    search_fields = ['product', ]
+    list_select_related = ['product', ]
+
+
+

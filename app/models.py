@@ -56,6 +56,7 @@ class ExpenseDehqon(models.Model):
     status = models.CharField(max_length=125, null=True, blank=True,
                               choices=[('progress', 'Jarayonda'), ('completed', 'Yakunlandi')], default='progress',
                               verbose_name="Holati")
+
     class Meta:
         verbose_name = "Dehqonlardan kelgan mol"
         verbose_name_plural = "Dehqonlarning kelgan mollar"
@@ -71,17 +72,20 @@ class IncomeClient(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True,
                                related_name='qaysi client oldi+', verbose_name="Mijoz")
     product_dehqon = models.ForeignKey(ExpenseDehqon, on_delete=models.SET_NULL, null=True,
-                                       related_name='qaysi dehqonni qoyi+' ,blank=True, verbose_name="Dehqonning mahsuloti")
+                                       related_name='qaysi dehqonni qoyi+', blank=True,
+                                       verbose_name="Dehqonning mahsuloti")
     quantity = models.IntegerField(null=True, blank=True, verbose_name="Soni")
     weight = models.FloatField(null=True, blank=True, default=0, verbose_name="Og'irligi")
     price = models.IntegerField(null=True, blank=True, default=0, verbose_name="Narxi")
     created_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=125, null=True, blank=True,verbose_name="Holati",
+    status = models.CharField(max_length=125, null=True, blank=True, verbose_name="Holati",
                               choices=[('bron', 'Bron qilindi'), ('progress', 'Jarayonda'),
                                        ('completed', 'Yakunlandi')], default='progress')
+
     class Meta:
         verbose_name = "Qushxona klienti sotib olgan mahsuloti"
         verbose_name_plural = "Qushxona klienti sotib olgan mahsulolari"
+
     def __str__(self):
         title = ""
         if self.client:
@@ -93,28 +97,34 @@ class IncomeClient(models.Model):
 
 
 class IncomeSotuvchi(models.Model):
-    sotuvchi = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sotuvchi",)
+    sotuvchi = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sotuvchi", )
     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Mahsulot")
     quantity = models.IntegerField(null=True, blank=True, verbose_name="Soni")
     weight = models.FloatField(null=True, blank=True, verbose_name="Og'irligi")
     price = models.IntegerField(null=True, blank=True, default=0, verbose_name="Narxi")
     created_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=88, null=True, blank=True,
-                              choices=[("progress", "Jarayonda"), ("completed", "yakunlandi")], default='progress', verbose_name="Holati")
+                              choices=[("progress", "Jarayonda"), ("completed", "yakunlandi")], default='progress',
+                              verbose_name="Holati")
+
     class Meta:
         verbose_name = "Bozor sotuvchi sotib olgan mahsuloti"
         verbose_name_plural = "Bozor sotuvchilari sotib olgan mahsulolari"
+
     def __str__(self):
         return f"{self.sotuvchi} {self.product} {self.created_date.ctime()}"
 
 
 class IncomeDehqon(models.Model):
-    dehqon_product = models.ForeignKey(ExpenseDehqon, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Dehqon mahsuloti")
+    dehqon_product = models.ForeignKey(ExpenseDehqon, on_delete=models.PROTECT, null=True, blank=True,
+                                       verbose_name="Dehqon mahsuloti")
     amount = models.IntegerField(null=True, blank=True, verbose_name="Miqdori")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Qabul qilib olingan sanasi")
+
     class Meta:
         verbose_name = "Dehqonga to'langan pullar"
         verbose_name_plural = "Dehqonlarga to'langan pullar"
+
     def __str__(self):
         if self.dehqon_product and self.dehqon_product.dehqon:
             return f"{self.dehqon_product.dehqon.full_name}   {self.amount}"
@@ -124,7 +134,8 @@ class IncomeDehqon(models.Model):
 
 class ExpenseClient(models.Model):
     amount = models.IntegerField(null=True, blank=True, default=0, verbose_name="Miqdori")
-    income_client = models.ForeignKey(IncomeClient, models.PROTECT, null=True, blank=True, verbose_name="Klient chiqimi")
+    income_client = models.ForeignKey(IncomeClient, models.PROTECT, null=True, blank=True,
+                                      verbose_name="Klient chiqimi")
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -135,14 +146,36 @@ class ExpenseClient(models.Model):
         return f"{self.income_client.client.full_name}  {self.amount}  {self.created_date}"
 
 
+class IncomeBazarOther(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Mahsulot")
+    quantity = models.IntegerField(null=True, blank=True, verbose_name="Soni")
+    weight = models.FloatField(null=True, blank=True, verbose_name="Og'irligi")
+    price = models.IntegerField(null=True, blank=True, default=0, verbose_name="Sotib olingan Narxi")
+    created_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=88, null=True, blank=True,
+                              choices=[("progress", "Jarayonda"), ("completed", "yakunlandi")], default='progress',
+                              verbose_name="Holati")
+    updated_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Bozor to'lovi"
+        verbose_name_plural = "Bozor to'lovlari"
+        ordering = ['-created_date']
+
+    def __str__(self):
+        return f"{self.product} {self.quantity} {self.price} {self.created_date.ctime()}"
+
+
 class ExpenseSotuvchi(models.Model):
-    income_sotuvchi = models.ForeignKey(IncomeSotuvchi, models.PROTECT, null=True, blank=True, verbose_name="Sotuvchi chiqimi")
-    amount = models.IntegerField(null=True, blank=True,  verbose_name="Miqdori")
+    income_sotuvchi = models.ForeignKey(IncomeSotuvchi, models.PROTECT, null=True, blank=True,
+                                        verbose_name="Sotuvchi chiqimi")
+    amount = models.IntegerField(null=True, blank=True, verbose_name="Miqdori")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Sana")
 
     class Meta:
         verbose_name = "Bozor sotuvchilari to'lovi"
         verbose_name_plural = "Bozor sotuvchilari to'lovlari"
+
     def __str__(self):
         return f"{self.income_sotuvchi.sotuvchi.full_name}  {self.amount}  {self.created_date}"
 
@@ -156,6 +189,7 @@ class KallaHasb(models.Model):
     class Meta:
         verbose_name = "Kalla hasb"
         verbose_name_plural = "Kalla hasblar"
+
     def __str__(self):
         return f"{self.mijoz.full_name}  {self.product.name}"
 
@@ -175,10 +209,12 @@ class Xarajat(models.Model):
     amount = models.IntegerField(null=True, blank=True, default=0, verbose_name="Miqdori")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Sana")
     choise = models.CharField(max_length=125, null=True, blank=True,
-                              choices=[("qushxona", "Qushxona uchun xarajat"), ('bozor', 'bozordagi xarajatlar')], verbose_name="Xarajat turi")
+                              choices=[("qushxona", "Qushxona uchun xarajat"), ('bozor', 'bozordagi xarajatlar')],
+                              verbose_name="Xarajat turi")
 
     class Meta:
         verbose_name = "Boshqa Xarajat"
         verbose_name_plural = "Boshqa Xarajatlar"
+
     def __str__(self):
         return self.comment
