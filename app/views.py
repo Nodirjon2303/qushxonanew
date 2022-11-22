@@ -4,11 +4,12 @@ from functools import wraps
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.db import connection
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
 from .models import *
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 
 def admin_only(function):
@@ -223,6 +224,22 @@ def incomeView(request):
             print(e)
             continue
     return render(request, 'IncomeClient.html', {'data': data})
+
+
+class BozorBozorIncomeView(ListView):
+    model = IncomeBazarOther
+    template_name = 'bozor-bozor-income.html'
+    context_object_name = 'data'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = IncomeBazarOther()
+        print(context)
+        return context
+
+    def get_queryset(self):
+        return self.model.objects.all().annotate(all_price=F('weight')*F('price')).order_by('-id')
 
 
 @qushxona_only
@@ -873,7 +890,8 @@ def bozorchiqimView(request):
         jamiogirlik += (ogirligi - sotogirlik)
 
     return render(request, 'bozorchiqim.html',
-                  {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar, 'mahsulotlar': datam,
+                  {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar,
+                   'mahsulotlar': datam,
                    'bazadaqolganson': jamiqolganson, 'qolganogirlik': jamiogirlik})
 
 
@@ -1088,9 +1106,11 @@ def bozorqarzView(request):
         })
         sanoq += 1
     data = [i for i in data if i['qarz'] > 0]
+
     def sort_function(i):
         return i['qarz']
-    data.sort(key=sort_function,reverse=True)
+
+    data.sort(key=sort_function, reverse=True)
     return render(request, 'bozorqarz.html', {'data': data})
 
 

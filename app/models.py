@@ -147,6 +147,7 @@ class ExpenseClient(models.Model):
 
 
 class IncomeBazarOther(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Mijoz")
     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Mahsulot")
     quantity = models.IntegerField(null=True, blank=True, verbose_name="Soni")
     weight = models.FloatField(null=True, blank=True, verbose_name="Og'irligi")
@@ -159,11 +160,11 @@ class IncomeBazarOther(models.Model):
 
     class Meta:
         verbose_name = "Bozordan ichki mahsulotlar"
-        verbose_name_plural = "Bozor ichki mahsulot"
+        verbose_name_plural = "Bozor ichki mahsulotlari"
         ordering = ['-created_date']
 
     def __str__(self):
-        return f"{self.product} {self.quantity} {self.price} {self.created_date.ctime()}"
+        return f"{self.product} {self.quantity} {self.price} {self.created_date}"
 
 
 class ExpenseSotuvchi(models.Model):

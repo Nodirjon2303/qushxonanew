@@ -1,10 +1,12 @@
 from django.urls import path
 from .views import *
+
 urlpatterns = [
     path('', homeView, name='home'),
-    path('save/', saveView, name = 'save'),
-    path('saveincome/', saveIncomeView, name = 'save'),
-    path('incomeclient/', incomeView, name = 'incomeclient'),
+    path('save/', saveView, name='save'),
+    path('saveincome/', saveIncomeView, name='save'),
+    path('incomeclient/', incomeView, name='incomeclient'),
+    path('bozor-bozor-income/', BozorBozorIncomeView.as_view(), name='bozor-bozor-kirim'),
     path('client/<int:slug>/', clientPageView, name='clientPageView'),
     path('clientpayment/', clientPaymentView, name='ClientPayment'),
     path('incomedehqons/', incomeDehqonView, name='incomedehqon'),
@@ -24,11 +26,11 @@ urlpatterns = [
     path('adduser/', adduserView, name='adduser'),
     path('qarz/', qarzView, name='qarz'),
     path('boshqa/', otherexpenseView, name='otherqarz'),
-    path('bozorchiqim/', bozorchiqimView, name = 'bozorchiqim'),
-    path('bozorboshqachiqim/', bozorboshqachiqimView, name = 'bozorboshqachiqim'),
-    path('sotuvchi/<int:slug>/', sotuvchiView, name = 'sotuvchi'),
-    path('qushxonastatistic/', qushxonastatisticsView, name = 'qushxonastatistik'),
-    path('bozorstatistic/', bozorstatisticsView, name = 'bozorstatistik'),
+    path('bozorchiqim/', bozorchiqimView, name='bozorchiqim'),
+    path('bozorboshqachiqim/', bozorboshqachiqimView, name='bozorboshqachiqim'),
+    path('sotuvchi/<int:slug>/', sotuvchiView, name='sotuvchi'),
+    path('qushxonastatistic/', qushxonastatisticsView, name='qushxonastatistik'),
+    path('bozorstatistic/', bozorstatisticsView, name='bozorstatistik'),
     path('bozorqarz/', bozorqarzView, name='bozorallqarz'),
     path('searchbox/', SearchboxView, name='searchbox'),
     path('logout/', logoutView, name='logout'),
