@@ -94,6 +94,16 @@ DATABASES = {
         'HOST': '137.184.201.8'
     }
 }
+# local database
+DATABASES = {
+    'default': {
+        "ENGINE": 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'qushxona',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost'
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

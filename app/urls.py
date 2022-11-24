@@ -7,6 +7,7 @@ urlpatterns = [
     path('saveincome/', saveIncomeView, name='save'),
     path('incomeclient/', incomeView, name='incomeclient'),
     path('bozor-bozor-income/', BozorBozorIncomeView.as_view(), name='bozor-bozor-kirim'),
+    path('bazar-bazar-add/', BazarBazarCreateView.as_view(), name='bazar-bazar-add'),
     path('client/<int:slug>/', clientPageView, name='clientPageView'),
     path('clientpayment/', clientPaymentView, name='ClientPayment'),
     path('incomedehqons/', incomeDehqonView, name='incomedehqon'),

@@ -7,7 +7,9 @@ from django.db import connection
 from django.db.models import Q, F
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 
+from .forms import BozorBozorIncomeForm
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
@@ -230,7 +232,7 @@ class BozorBozorIncomeView(ListView):
     model = IncomeBazarOther
     template_name = 'bozor-bozor-income.html'
     context_object_name = 'data'
-    paginate_by = 10
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -239,7 +241,18 @@ class BozorBozorIncomeView(ListView):
         return context
 
     def get_queryset(self):
-        return self.model.objects.all().annotate(all_price=F('weight')*F('price')).order_by('-id')
+        return self.model.objects.all().select_related('client', 'product').annotate(
+            all_price=F('weight') * F('price')).order_by('-id')
+
+
+class BazarBazarCreateView(CreateView):
+    model = IncomeBazarOther
+    template_name = 'bazar-add.html'
+    context_object_name = 'data'
+    form_class = BozorBozorIncomeForm
+
+    def get_success_url(self):
+        return reverse('bozor-bozor-kirim')
 
 
 @qushxona_only
