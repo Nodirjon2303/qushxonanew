@@ -1,6 +1,6 @@
 {% extends 'bozorbase.html' %}
 {% block content %}
-<!-- 
+    <!--
     Jami qolgan soni : {{ bazadaqolganson }}
     Jami kg: {{ qolganogirlik }}
  -->
@@ -8,46 +8,66 @@
 
 
     <div class="limiter">
-       
+
         <div class="container-table100">
             <div class="wrap-table100">
-    <div style="color: rgb(11, 202, 37); background-color: #f7f7f7; display: inline-block" >
-                Jami qolgan soni : {{ bazadaqolganson }}    <br>
-                Jami kg: {{ qolganogirlik }}
+                <div style="color: rgb(11, 202, 37); background-color: #f7f7f7; display: inline-block">
+                    Qushxona
+                    <br>
+                    Jami qolgan soni : {{ bazadaqolganson }} <br>
+                    Jami kg: {{ qolganogirlik }}
+                </div>
+
+                <div style="margin-left: 8%; color: rgb(11, 202, 37); background-color: #f7f7f7; display: inline-block">
+                    Bozor
+                    <br>
+                    Jami soni: {{ income_bazar_soni }}
+                    <br>
+                    Jami kg: {{ income_bazar_kg }}
+
+                </div>
+
+            <div class="button" style="margin-left: 8%;text-align: center;margin-bottom: 25px; height: 55px; width: 12%; color: rgb(11, 202, 37); background-color: #f7f7f7; display: inline-block">
+
+        <a href="{% url 'bazar-chiqim-create' %} ">
+            <button class="btn btn-outline-success">
+                Qo'shish
+            </button>
+        </a>
             </div>
-            
+
                 <div class="table100 ver1 m-b-110">
                     <div class=" table100-head">
-                        <table >
+                        <table>
                             <thead>
-                                <tr class="row100 head">
-                                    <th class="cell100 column1">№</th>
-                                    <th class="cell100 column1">Mijoz</th>
-                                    <th class="cell100 column1">Mahsulot</th>
-                                    <th class="cell100 column1">Og'irligi</th>
-                                    <th class="cell100 column1">Narxi</th>
-                                    <th class="cell100 column1">To'lov</th>
-                                    <th class="cell100 column1">Soni</th>
-                                    <th class="cell100 column1">Jami</th>
-                                    <th class="cell100 column1">Sanasi</th>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column1">Mijoz</th>
+                                <th class="cell100 column1">Mahsulot</th>
+                                <th class="cell100 column1">Og'irligi</th>
+                                <th class="cell100 column1">Narxi</th>
+                                <th class="cell100 column1">To'lov</th>
+                                <th class="cell100 column1">Soni</th>
+                                <th class="cell100 column1">Jami</th>
+                                <th class="cell100 column1">Sanasi</th>
 
-                                </tr>
-    
+                            </tr>
+
                             </thead>
-                            
+
                         </table>
                     </div>
-    
-         
+
+
                     <div class="table100-body js-pscroll">
-                        
+
                         <table id="qushxona_table">
-                            
+
                             <tbody>
-                                {% for i in data %}
-                            
-                                <tr >
-                                    <td class="cell100 column1">{{ i.n }}</td>
+                            {% for i in data %}
+
+                                <tr>
+                                    <td class="cell100 column1">{{ forloop.counter }}</td>
                                     <td><a href="{% url 'sotuvchi' i.id %}">{{ i.sotuvchi }}</a></td>
                                     <td class="cell100 column1">{{ i.mahsulot }}</td>
                                     <td class="cell100 column1">{{ i.ogirligi }}</td>
@@ -57,47 +77,50 @@
                                     <td class="cell100 column1">{{ i.jami_summa }}</td>
                                     <td class="cell100 column1">{{ i.date }}</td>
                                 </tr>
-                                {% endfor %}
+                            {% endfor %}
 
-                                <tr>
-                                    <td>№</td>
-                                    <td><select name="sotuvchi" id="sotuvchi">
-                                        <option value="">Sotuvchilar</option>
-                                        {% for i in sotuvchilar %}
-                                        <option value="{{ i.id }}">{{ i.full_name }}</option>
-                                        {% endfor %}
-                                    </select></td>
-                                    <td><select name="mahsulot" id="mahsulot">
-                                        <option value="">mahsulotlar</option>
-                                        {% for i in mahsulotlar %}
-                                            <option value="{{i.id}}">{{ i.name }}</option>
-                                        {% endfor %}
-                                    </select></td>
-                                    <td><input id="ogirligi" type="text" placeholder="25+35+45+55+25"></td>
-                                    <td><input id="price" type="number" placeholder="1 kg narxini kiriting"></td>
-                                    <td><input id="tulov" type="number" placeholder="qilgan to'lovingiz miqdorini kiriting"></td>
-                                    <td><button onclick="bozor_chiqim_save()">Saqlash</button></td>
-                                </tr>
-                            
+{#                            <tr>#}
+{#                                <td>№</td>#}
+{#                                <td><select name="sotuvchi" id="sotuvchi">#}
+{#                                    <option value="">Sotuvchilar</option>#}
+{#                                    {% for i in sotuvchilar %}#}
+{#                                        <option value="{{ i.id }}">{{ i.full_name }}</option>#}
+{#                                    {% endfor %}#}
+{#                                </select></td>#}
+{#                                <td><select name="mahsulot" id="mahsulot">#}
+{#                                    <option value="">mahsulotlar</option>#}
+{#                                    {% for i in mahsulotlar %}#}
+{#                                        <option value="{{ i.id }}">{{ i.name }}</option>#}
+{#                                    {% endfor %}#}
+{#                                </select></td>#}
+{#                                <td><input id="ogirligi" type="text" placeholder="25+35+45+55+25"></td>#}
+{#                                <td><input id="price" type="number" placeholder="1 kg narxini kiriting"></td>#}
+{#                                <td><input id="tulov" type="number" placeholder="qilgan to'lovingiz miqdorini kiriting">#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    <button onclick="bozor_chiqim_save()">Saqlash</button>#}
+{#                                </td>#}
+{#                            </tr>#}
+
                             </tbody>
-                            
+
                         </table>
-                        
-                        
-    
+
+
                     </div>
-                            
+
                 </div>
-    
+
                 <div id="jamisi" class="jami_qarz" style="background-color: #f7f7f7; display: inline-block">
-                
+
                     <p style="color: red; text-align: center; background-color: #f7f7f7">
+                        Jami sotilganlaari <br>
                         Jami kg: {{ gush }}<br>
                         Jami soni: {{ soni }}
                     </p>
-                
-               </div>
-    
+
+                </div>
+
             </div>
         </div>
     </div>
@@ -116,7 +139,7 @@
 
 
 
-<!-- 
+    <!--
     <div class="qushxona__table1">
         <table class="qushxona_table">
             <tr>

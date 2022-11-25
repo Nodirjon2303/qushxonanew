@@ -22,8 +22,10 @@
     </style>
     <div class="button" style="background-color: #f7f7f7; margin-top: 10px">
         <a href="{% url 'bazar-bazar-add' %} ">
-    <button class="btn btn-outline-success" style="margin-left: 80%; margin-top: 5px; margin-bottom: 5px; ">Qo'shish</button>
-    </a>
+            <button class="btn btn-outline-success" style="margin-left: 80%; margin-top: 5px; margin-bottom: 5px; ">
+                Qo'shish
+            </button>
+        </a>
     </div>
     <div style="text-align: center;margin-right: 25px;margin-top: 25px; margin-left: 25px; background-color: #f7f7f7"
          class="center">
@@ -41,7 +43,7 @@
             {% for i in page_obj %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ i.client.full_name }}</td>
+                    <td><a href="{% url 'bozor-bozor-kirim-update' i.id %}">{{ i.client.full_name }}</a></td>
                     <td>{{ i.product.name }}</td>
                     <td>{{ i.weight }}</td>
                     <td>{{ i.price }}</td>
@@ -51,7 +53,7 @@
             {% endfor %}
         </table>
         {% if is_paginated %}
-        <div class="pagination">
+            <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
                     <a href="?page={{ page_obj.previous_page_number }}">Avvalgi sahifa</a>
@@ -63,8 +65,8 @@
                     <a href="?page={{ page_obj.next_page_number }}">Keyingi sahifa</a>
                 {% endif %}
             </span>
-        </div>
-    {% endif %}
+            </div>
+        {% endif %}
 
 
 

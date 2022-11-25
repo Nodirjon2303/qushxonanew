@@ -82,6 +82,32 @@ class IncomeClient(models.Model):
                               choices=[('bron', 'Bron qilindi'), ('progress', 'Jarayonda'),
                                        ('completed', 'Yakunlandi')], default='progress')
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        from app.models import BazarAllIncomeStock
+        self.weight = int(self.weight * 10) / 10
+        super().save(force_insert, force_update, using, update_fields)
+        if self.status in ('progress' or 'completed') and self.client.status_bozor:
+            if not BazarAllIncomeStock.objects.filter(
+                    remote_id=self.id, source='qushxona').exists():
+                BazarAllIncomeStock.objects.create(
+                    remote_id=self.id,
+                    source='qushxona',
+                    product=self.product_dehqon.product,
+                    quantity=self.quantity,
+                    weight=self.weight,
+                    price=self.price,
+                    client=self.client,
+                )
+            else:
+                bazar_income = BazarAllIncomeStock.objects.filter(remote_id=self.id, source='qushxona').first()
+                bazar_income.client = self.client
+                bazar_income.product = self.product_dehqon.product
+                bazar_income.quantity = self.quantity
+                bazar_income.weight = self.weight
+                bazar_income.price = self.price
+                bazar_income.save()
+
     class Meta:
         verbose_name = "Qushxona klienti sotib olgan mahsuloti"
         verbose_name_plural = "Qushxona klienti sotib olgan mahsulolari"
@@ -158,6 +184,22 @@ class IncomeBazarOther(models.Model):
                               verbose_name="Holati")
     updated_date = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        super(IncomeBazarOther, self).save(*args, **kwargs)
+        from app.models import BazarAllIncomeStock
+        if not BazarAllIncomeStock.objects.filter(remote_id=self.id, source='bazar').exists():
+            BazarAllIncomeStock.objects.create(product=self.product, client=self.client, remote_id=self.id,
+                                               quantity=self.quantity, weight=self.weight, source='bozor',
+                                               price=self.price)
+        else:
+            bazar = BazarAllIncomeStock.objects.get(source='bozor', remote_id=self.id)
+            bazar.client = self.client
+            bazar.product = self.product
+            bazar.quantity = self.quantity
+            bazar.weight = self.weight
+            bazar.price = self.price
+            bazar.save()
+
     class Meta:
         verbose_name = "Bozordan ichki mahsulotlar"
         verbose_name_plural = "Bozor ichki mahsulotlari"
@@ -219,3 +261,27 @@ class Xarajat(models.Model):
 
     def __str__(self):
         return self.comment
+
+
+class BazarSource(models.Choices):
+    bozor = 'bozor'
+    qushxona = 'qushxona'
+
+
+class BazarAllIncomeStock(models.Model):
+    product = models.ForeignKey(Product, models.PROTECT, null=True, blank=True, verbose_name="Mahsulot")
+    client = models.ForeignKey(Client, models.PROTECT)
+    quantity = models.IntegerField(null=True, blank=True, default=0, verbose_name="Soni")
+    weight = models.FloatField(null=True, blank=True, default=0, verbose_name="Og'irligi")
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="Sana")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="Yangilangan sana")
+    remote_id = models.IntegerField(verbose_name="Remote id")
+    price = models.IntegerField(verbose_name="Narxi 1kg uchun")
+    source = models.CharField(max_length=125, choices=BazarSource.choices, verbose_name="Manba")
+
+    class Meta:
+        verbose_name = "Bozorga barcha sotib olingan mahsulotlar"
+        verbose_name_plural = "Bozorga barcha sotib olingan mahsulotlar"
+
+    def __str__(self):
+        return f"{self.product.name}  {self.quantity}"

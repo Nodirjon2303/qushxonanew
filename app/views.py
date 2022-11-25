@@ -4,12 +4,12 @@ from functools import wraps
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.db import connection
-from django.db.models import Q, F
+from django.db.models import Q, F, Sum
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .forms import BozorBozorIncomeForm
+from .forms import BozorBozorIncomeForm, BazarChiqimForm
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
@@ -253,6 +253,19 @@ class BazarBazarCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('bozor-bozor-kirim')
+
+
+class BozorBozorIncomeUpdateView(UpdateView):
+    model = IncomeBazarOther
+    template_name = 'bazar-add.html'
+    context_object_name = 'data'
+    form_class = BozorBozorIncomeForm
+
+    def get_success_url(self):
+        return reverse('bozor-bozor-kirim')
+
+    def get_object(self, queryset=None):
+        return self.model.objects.get(id=self.kwargs['pk'])
 
 
 @qushxona_only
@@ -878,6 +891,8 @@ def bozorchiqimView(request):
         })
         jami_gush += i.weight
         jami_soni += i.quantity
+    income_bazar_kg = IncomeBazarOther.objects.filter(status='progress').aggregate(Sum('weight'))['weight__sum']
+    income_bazar_soni = IncomeBazarOther.objects.filter(status='progress').aggregate(Sum('quantity'))['quantity__sum']
     sotuvchilar = Client.objects.filter(role='sotuvchi').order_by('full_name')
     products = Product.objects.all()
     datam = []
@@ -905,7 +920,20 @@ def bozorchiqimView(request):
     return render(request, 'bozorchiqim.html',
                   {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar,
                    'mahsulotlar': datam,
+                   'income_bazar_kg': income_bazar_kg, 'income_bazar_soni': income_bazar_soni,
                    'bazadaqolganson': jamiqolganson, 'qolganogirlik': jamiogirlik})
+
+
+class BazarChiqimCreateView(CreateView):
+    template_name = 'bozor-chiqim-add.html'
+    form_class = BazarChiqimForm
+    model = IncomeSotuvchi
+    def get_queryset(self):
+        return self.model.objects.all()
+
+
+    def get_success_url(self):
+        return reverse('bozorchiqim')
 
 
 @bozor_only

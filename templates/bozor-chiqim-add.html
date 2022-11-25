@@ -1,0 +1,45 @@
+{% extends 'bozorbase.html' %}
+{% block content %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #f7f7f7;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+
+        }
+
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 22px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+    </style>
+    <div style="background-color: #f7f7f7; margin-top: 20px">
+        <div style="margin-top: 30px; margin-left: 5%">
+            <h2>Mahsulot sotish (Bozor)</h2>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button style="margin-top: 30px; margin-bottom: 30px" class="button">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
