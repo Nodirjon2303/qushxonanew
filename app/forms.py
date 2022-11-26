@@ -10,6 +10,8 @@ class BozorBozorIncomeForm(ModelForm):
         model = IncomeBazarOther
         fields = ['client', 'product', 'quantity', 'weight', 'price']
 
+    weight = forms.FloatField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['client'].label = 'Mijoz'
@@ -43,15 +45,18 @@ class BazarChiqimForm(ModelForm):
 
     class Meta:
         model = IncomeSotuvchi
-        fields = ['sotuvchi', 'product', 'quantity', 'weight', 'weight_res', 'price', 'payed_amount']
-
-
-
+        fields = ['sotuvchi', 'product', 'quantity', 'weight_res', 'weight', 'price', 'payed_amount']
 
     def clean_weight(self):
-        print(self.cleaned_data)
-        if 'product' not in self.cleaned_data or ('weight' not in self.cleaned_data):
+        if 'product' not in self.cleaned_data or (
+                'weight' not in self.cleaned_data) or 'weight_res' not in self.cleaned_data:
             raise ValidationError("Iltimos mahsulot va uning og'irligini kiriting")
+        try:
+            weight = sum([int(i) for i in self.cleaned_data['weight_res'].split('+') if i])
+        except ValueError:
+            raise ValidationError('Og\'irligi to\'g\'ri kiriting')
+        if weight != self.cleaned_data['weight']:
+            raise ValidationError('Og\'irligi to\'g\'ri kiriting')
         if self.cleaned_data['weight'] <= self.products[self.cleaned_data['product'].id]:
             return self.cleaned_data['product']
         else:
@@ -82,6 +87,9 @@ class BazarChiqimForm(ModelForm):
         self.fields['weight_res'].widget.attrs.update({'placeholder': 'Og\'irligi(56+34+28+64)'})
         self.fields['price'].widget.attrs.update({'placeholder': 'Narxi(1 kg)'})
         self.fields['payed_amount'].widget.attrs.update({'placeholder': 'Mijozning to\'lovi'})
+        # default values
+        self.fields['weight'].initial = 0
+        self.fields['quantity'].initial = 0
 
         # updating client and product querysets
         self.fields['sotuvchi'].queryset = self.fields['sotuvchi'].queryset.filter(role='client').order_by('full_name')
