@@ -1,148 +1,217 @@
 {% extends 'bozorbase.html' %}
+{#{% block content %}#}
+{##}
+{#<!-- ortga button css i tugirlash kk, jadvallar almashmayapti, tolov qilish button-->#}
+{#<div class="limiter">#}
+{#  #}
+{#    #}
+{#    <div class="container-table100">#}
+{#        <div class="wrap-table100">#}
+{##}
+{#            <div id="information">#}
+{##}
+{#            </div>#}
+{#            <div id="status">#}
+{#        #}
+{#            </div>#}
+{#        #}
+{#           #}
+{##}
+{#            <div class="table100 ver1 m-b-110">#}
+{#                <div class=" table100-head" >#}
+{#                    <table >#}
+{#                        <thead>#}
+{#                            <tr class="row100 head">#}
+{#                                <th class="cell100 column1">№</th>#}
+{#                                <th class="cell100 column1">Sotuvchi</th>#}
+{#                                <th class="cell100 column1">Mahsulot</th>#}
+{#                                <th class="cell100 column1">Soni</th>#}
+{#                                <th class="cell100 column1">Og'irligi</th>#}
+{#                                <th class="cell100 column1">Narxi</th>#}
+{#                                <th class="cell100 column1">Sanasi</th>#}
+{#                                <th class="cell100 column1">Jami summa</th>#}
+{#                                <th class="cell100 column1">Jami tulov</th>#}
+{#                                <th class="cell100 column1">Qolgan qarz</th>#}
+{#                                <th class="cell100 column1">To'lov</th>#}
+{#                         #}
+{#                            </tr>#}
+{##}
+{#                        </thead>#}
+{#                        #}
+{#                    </table>#}
+{#                </div>#}
+{##}
+{#   <br>#}
+{##}
+{#                <div class="table100-body js-pscroll">#}
+{#                    #}
+{#                    <table id="qushxona__table1" class="qushxona_table"   >#}
+{#                        #}
+{#                        <tbody>#}
+{#                            {% for i in data %}#}
+{#                        #}
+{#                            <tr >#}
+{#                                <td class="cell100 column1">{{ i.n }}</td>#}
+{#                                <td class="cell100 column1">{{ i.sotuvchi }}</td>#}
+{#                                <td class="cell100 column1">{{ i.mahsulot }}</td>#}
+{#                                <td class="cell100 column1">{{ i.soni }}</td>#}
+{#                                <td class="cell100 column1">{{ i.ogirligi }}</td>#}
+{#                                <td class="cell100 column1">{{ i.narxi }}</td>#}
+{#                                <td class="cell100 column1">{{ i.date }}</td>#}
+{#                                <td class="cell100 column1">{{ i.jamisumma }}</td>#}
+{#                                <td class="cell100 column1">{{ i.jamitulov }}</td>#}
+{#                                <td class="cell100 column1">{{ i.qarz }}</td>#}
+{#                                <td>#}
+{#                                    <button style="color:blue;"#}
+{#                                            onclick='payments_sotuvchi({{ i.payments }}, "{{ i.sotuvchi }}", "{{ i.mahsulot }}", {{ i.soni }}, {{ i.id }}, {{ i.qarz }})'>#}
+{#                                        To'lov qo'shish#}
+{#                                    </button>#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                            {% endfor %}#}
+{#                        #}
+{#                        </tbody>#}
+{#                        #}
+{#                    </table>#}
+{#                    #}
+{#                    #}
+{##}
+{#                </div>#}
+{#                <div id="backbutton" class="button_save"></div>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#<!-- #}
+{##}
+{##}
+{##}
+{#    <div id="information">#}
+{##}
+{#    </div>#}
+{#    <div id="status">#}
+{##}
+{#    </div>#}
+{##}
+{##}
+{##}
+{#    <div class="qushxona__table1"  style="margin: 3%">#}
+{#        <table class="qushxona_table"  id="qushxona__table1"     style="margin: 2%">#}
+{#            <tr>#}
+{#                <th>№</th>#}
+{#                <th>Sotuvchi</th>#}
+{#                <th>Mahsulot</th>#}
+{#                <th>Soni</th>#}
+{#                <th>Og'irligi</th>#}
+{#                <th>Narxi</th>#}
+{#                <th>Sanasi</th>#}
+{#                <th>Jami summa</th>#}
+{#                <th>Jami tulov</th>#}
+{#                <th>Qolgan qarz</th>#}
+{#            </tr>#}
+{#            {% for i in data %}#}
+{#                <tr>#}
+{#                    <td>{{ i.n }}</td>#}
+{#                    <td>{{ i.sotuvchi }}</td>#}
+{#                    <td>{{ i.mahsulot }}</td>#}
+{#                    <td>{{ i.soni }}</td>#}
+{#                    <td>{{ i.ogirligi }}</td>#}
+{#                    <td>{{ i.narxi }}</td>#}
+{#                    <td>{{ i.sanasi }}</td>#}
+{#                    <td>{{ i.jamisumma }}</td>#}
+{#                    <td>{{ i.jamitulov }}</td>#}
+{#                    <td>{{ i.qarz }}</td>#}
+{#                    <td>#}
+{#                        <button style="color:blue;"#}
+{#                                onclick='payments_sotuvchi({{ i.payments }}, "{{ i.sotuvchi }}", "{{ i.mahsulot }}", {{ i.soni }}, {{ i.id }}, {{ i.qarz }})'>#}
+{#                            To'lov qo'shish#}
+{#                        </button>#}
+{#                    </td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{##}
+{#        </table>#}
+{##}
+{#    </div>#}
+{#    <div id="backbutton"></div> -->#}
+{#{% endblock %}#}
+
 {% block content %}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #f7f7f7;
+        }
 
-<!-- ortga button css i tugirlash kk, jadvallar almashmayapti, tolov qilish button-->
-<div class="limiter">
-  
-    
-    <div class="container-table100">
-        <div class="wrap-table100">
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
 
-            <div id="information">
+        tr:nth-child(even) {
+            background-color: #dddddd;
 
-            </div>
-            <div id="status">
-        
-            </div>
-        
-           
+        }
 
-            <div class="table100 ver1 m-b-110">
-                <div class=" table100-head" >
-                    <table >
-                        <thead>
-                            <tr class="row100 head">
-                                <th class="cell100 column1">№</th>
-                                <th class="cell100 column1">Sotuvchi</th>
-                                <th class="cell100 column1">Mahsulot</th>
-                                <th class="cell100 column1">Soni</th>
-                                <th class="cell100 column1">Og'irligi</th>
-                                <th class="cell100 column1">Narxi</th>
-                                <th class="cell100 column1">Sanasi</th>
-                                <th class="cell100 column1">Jami summa</th>
-                                <th class="cell100 column1">Jami tulov</th>
-                                <th class="cell100 column1">Qolgan qarz</th>
-                                <th class="cell100 column1">To'lov</th>
-                         
-                            </tr>
+    </style>
 
-                        </thead>
-                        
-                    </table>
-                </div>
-
-   <br>
-
-                <div class="table100-body js-pscroll">
-                    
-                    <table id="qushxona__table1" class="qushxona_table"   >
-                        
-                        <tbody>
-                            {% for i in data %}
-                        
-                            <tr >
-                                <td class="cell100 column1">{{ i.n }}</td>
-                                <td class="cell100 column1">{{ i.sotuvchi }}</td>
-                                <td class="cell100 column1">{{ i.mahsulot }}</td>
-                                <td class="cell100 column1">{{ i.soni }}</td>
-                                <td class="cell100 column1">{{ i.ogirligi }}</td>
-                                <td class="cell100 column1">{{ i.narxi }}</td>
-                                <td class="cell100 column1">{{ i.date }}</td>
-                                <td class="cell100 column1">{{ i.jamisumma }}</td>
-                                <td class="cell100 column1">{{ i.jamitulov }}</td>
-                                <td class="cell100 column1">{{ i.qarz }}</td>
-                                <td>
-                                    <button style="color:blue;"
-                                            onclick='payments_sotuvchi({{ i.payments }}, "{{ i.sotuvchi }}", "{{ i.mahsulot }}", {{ i.soni }}, {{ i.id }}, {{ i.qarz }})'>
-                                        To'lov qo'shish
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        
-                        </tbody>
-                        
-                    </table>
-                    
-                    
-
-                </div>
-                <div id="backbutton" class="button_save"></div>
-            </div>
-
-        </div>
+    <div class="button" style="background-color: #f7f7f7; margin-top: 10px">
+        <a href="{% url 'bazar-bazar-add' %} ">
+            <button class="btn btn-outline-success" style="margin-left: 80%; margin-top: 5px; margin-bottom: 5px; ">
+                Qo'shish
+            </button>
+        </a>
     </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-<!-- 
-
-
-
-    <div id="information">
-
-    </div>
-    <div id="status">
-
-    </div>
-
-
-
-    <div class="qushxona__table1"  style="margin: 3%">
-        <table class="qushxona_table"  id="qushxona__table1"     style="margin: 2%">
+    <div style="text-align: center;margin-right: 25px;margin-top: 25px; margin-left: 25px; background-color: #f7f7f7"
+         class="center">
+        <h2>Bozordan sotib olingan mahsulotlar</h2>
+        <table>
             <tr>
                 <th>№</th>
-                <th>Sotuvchi</th>
+                <th>Mijoz</th>
                 <th>Mahsulot</th>
-                <th>Soni</th>
+                <th>Miqdori</th>
                 <th>Og'irligi</th>
-                <th>Narxi</th>
+                <th>Narxi(1 kg)</th>
+                <th>Jami</th>
+                <th>Jami to'lov</th>
+                <th>Qolgan Qarz</th>
                 <th>Sanasi</th>
-                <th>Jami summa</th>
-                <th>Jami tulov</th>
-                <th>Qolgan qarz</th>
+                <th>-</th>
+
             </tr>
             {% for i in data %}
                 <tr>
-                    <td>{{ i.n }}</td>
+                    <td>{{ forloop.counter }}</td>
                     <td>{{ i.sotuvchi }}</td>
                     <td>{{ i.mahsulot }}</td>
                     <td>{{ i.soni }}</td>
                     <td>{{ i.ogirligi }}</td>
                     <td>{{ i.narxi }}</td>
-                    <td>{{ i.sanasi }}</td>
                     <td>{{ i.jamisumma }}</td>
                     <td>{{ i.jamitulov }}</td>
                     <td>{{ i.qarz }}</td>
-                    <td>
-                        <button style="color:blue;"
-                                onclick='payments_sotuvchi({{ i.payments }}, "{{ i.sotuvchi }}", "{{ i.mahsulot }}", {{ i.soni }}, {{ i.id }}, {{ i.qarz }})'>
-                            To'lov qo'shish
-                        </button>
-                    </td>
+                    <td>{{ i.sanasi }}</td>
+                    <td><a href="{% url 'sotuvchi-savdo-list' i.id %}">to'lov qo'shish</a></td>
                 </tr>
             {% endfor %}
-
         </table>
-
     </div>
-    <div id="backbutton"></div> -->
-{% endblock %}
+
+
+
+{% endblock content %}

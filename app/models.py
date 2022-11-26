@@ -218,7 +218,7 @@ class IncomeBazarOther(models.Model):
 class ExpenseSotuvchi(models.Model):
     income_sotuvchi = models.ForeignKey(IncomeSotuvchi, models.PROTECT, null=True, blank=True,
                                         verbose_name="Sotuvchi chiqimi")
-    amount = models.IntegerField(null=True, blank=True, verbose_name="Miqdori")
+    amount = models.IntegerField(verbose_name="Miqdori")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Sana")
 
     class Meta:
@@ -226,7 +226,7 @@ class ExpenseSotuvchi(models.Model):
         verbose_name_plural = "Bozor sotuvchilari to'lovlari"
 
     def __str__(self):
-        return f"{self.income_sotuvchi.sotuvchi.full_name}  {self.amount}  {self.created_date}"
+        return f"{self.income_sotuvchi}  {self.amount}  {self.created_date}"
 
 
 class KallaHasb(models.Model):

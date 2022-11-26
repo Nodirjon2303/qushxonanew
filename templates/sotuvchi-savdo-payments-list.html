@@ -1,0 +1,67 @@
+{% extends 'bozorbase.html' %}
+
+{% block content %}
+    <style>
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+    <div style="background-color: white; margin-top: 25px; ">
+        <h3 style="text-align: center">{{ object_list.0.sotuvchi.full_name }} Mijozning {{ object_list.created_date }}
+            sanadagi {{ object_list.0.product.name }}
+            uchun to'lovlar jadvali</h3>
+
+        <table id="customers">
+            <tr>
+                <th>№</th>
+                <th>To'lov miqdori</th>
+                <th>To'lov sanasi</th>
+            </tr>
+            {% for i in object_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.amount }}</td>
+                    <td>{{ i.created_date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+           <h1 style="text-align: center">To'lov qo'shish</h1>
+        <form action="{% url 'sotuvchi-add-payment' pk  %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button button1">
+                Saqlash
+            </button>
+        </form>
+
+
+    </div>
+
+
+
+
+
+{% endblock content %}

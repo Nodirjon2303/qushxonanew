@@ -47,7 +47,7 @@ class BazarChiqimForm(ModelForm):
 
     class Meta:
         model = IncomeSotuvchi
-        fields = ['sotuvchi', 'product', 'source',  'quantity', 'weight_res', 'weight', 'price', 'payed_amount']
+        fields = ['sotuvchi', 'product', 'source', 'quantity', 'weight_res', 'weight', 'price', 'payed_amount']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -67,8 +67,6 @@ class BazarChiqimForm(ModelForm):
                 amount=self.cleaned_data['payed_amount']
             )
         return instance
-
-
 
     def clean_weight(self):
         if 'product' not in self.cleaned_data or (
@@ -126,3 +124,21 @@ class BazarChiqimForm(ModelForm):
         }
         self.products = products
         self.fields['product'].queryset = Product.objects.filter(id__in=products.keys()).order_by('name')
+
+
+class SotuvchiAddPaymentForm(ModelForm):
+    class Meta:
+        model = ExpenseSotuvchi
+        fields = ['amount', 'income_sotuvchi']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['amount'].label = "To'lov summasi"
+        self.fields['amount'].widget.attrs.update({'class': 'form-control'})
+        self.fields['amount'].widget.attrs.update({'placeholder': 'To\'lov summasini kiriting (so\'m)'})
+        self.fields['income_sotuvchi'].widget = forms.HiddenInput()
+
+    # def save(self, commit=True):
+    #     instance = super().save(commit=True)
+    #     print(instance, self.cleaned_data)
+    #     return instance

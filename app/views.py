@@ -8,8 +8,9 @@ from django.db.models import Q, F, Sum
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views import View
 
-from .forms import BozorBozorIncomeForm, BazarChiqimForm
+from .forms import BozorBozorIncomeForm, BazarChiqimForm, SotuvchiAddPaymentForm
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
@@ -982,8 +983,53 @@ def sotuvchiView(request, slug):
             'payments': payments
         })
         sanoq += 1
+    form = SotuvchiAddPaymentForm()
 
-    return render(request, 'sotuvchi.html', {'data': data})
+    return render(request, 'sotuvchi.html', {'data': data,
+                                             'sotuvchi_id': slug,
+                                             'form': form
+                                             })
+
+
+class SotuvchiCreateView(View):
+    form_class = SotuvchiAddPaymentForm
+    model = IncomeSotuvchi
+
+    def get_object(self, queryset=None):
+        return self.model.objects.get(id=self.kwargs['pk'])
+
+    def get_initial(self):
+        return {'income_sotuvchi': self.get_object(),
+                'amount': self.request.POST.get('amount')
+                }
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            income_sotuvchi = IncomeSotuvchi.objects.get(id=self.kwargs['pk'])
+            ExpenseSotuvchi.objects.create(income_sotuvchi=income_sotuvchi, amount=amount).save()
+            return redirect('sotuvchi', slug=income_sotuvchi.sotuvchi.id)
+        else:
+            return redirect('sotuvchi-savdo-list', pk=self.kwargs['pk'])
+
+    def get_success_url(self):
+        return reverse('sotuvchi-savdo-list', kwargs={'pk': self.kwargs['pk']})
+
+
+class SotuvchiSavdoListPaymentsView(ListView):
+    template_name = 'sotuvchi-savdo-payments-list.html'
+    model = ExpenseSotuvchi
+
+    def get_queryset(self):
+        return self.model.objects.filter(income_sotuvchi_id=self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        form = SotuvchiAddPaymentForm()
+        context['form'] = form
+        return context
 
 
 @bozor_only
