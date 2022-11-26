@@ -868,11 +868,9 @@ def bozorchiqimView(request):
         if tulov:
             ExpenseSotuvchi.objects.create(income_sotuvchi=income, amount=int(tulov))
         return JsonResponse({'data': 'ok'})
-
-    client = Client.objects.filter(role='client', status_bozor=True).first()
-    jami_gush = 0
     jami_soni = 0
-    incomes = IncomeSotuvchi.objects.filter(status='progress').select_related('sotuvchi', 'product')
+    incomes = IncomeSotuvchi.objects.filter(status='progress').select_related('sotuvchi', 'product').order_by(
+        '-created_date')
     sanoq = 1
     data = []
     all_expense_sotuvchi = ExpenseSotuvchi.objects.filter(income_sotuvchi_id__in=[i.id for i in incomes])
@@ -889,34 +887,17 @@ def bozorchiqimView(request):
             'tulov': sum([j.amount for j in [k for k in all_expense_sotuvchi if k.income_sotuvchi_id == i.id]]),
             'date': i.created_date.strftime("%d-%m-%Y %H:%M")
         })
-        jami_gush += i.weight
-        jami_soni += i.quantity
     income_bazar_kg = IncomeBazarOther.objects.filter(status='progress').aggregate(Sum('weight'))['weight__sum']
     income_bazar_soni = IncomeBazarOther.objects.filter(status='progress').aggregate(Sum('quantity'))['quantity__sum']
     sotuvchilar = Client.objects.filter(role='sotuvchi').order_by('full_name')
-    products = Product.objects.all()
+
     datam = []
-    jamiqolganson = 0
-    jamiogirlik = 0
-    all_income_sotuvchi = IncomeSotuvchi.objects.filter(product_id__in=[i.id for i in products])
-    all_income_clients = IncomeClient.objects.filter(~Q(status='bron'), client_id=client.id).select_related(
-        'product_dehqon__product')
-    for i in products:
-        incomes = [k for k in all_income_clients if k.product_dehqon.product_id == i.id]
-        soni = sum([i.quantity for i in incomes])
-        ogirligi = sum([i.weight for i in incomes])
+    jamiqolganson = BazarAllIncomeStock.objects.aggregate(Sum('quantity'))['quantity__sum'] - \
+                    IncomeSotuvchi.objects.aggregate(Sum('quantity'))['quantity__sum']
+    jamiogirlik = BazarAllIncomeStock.objects.aggregate(Sum('weight'))['weight__sum'] - \
+                  IncomeSotuvchi.objects.aggregate(Sum('weight'))['weight__sum']
 
-        sotilganlari = int(sum([i.quantity for i in [k for k in all_income_sotuvchi if k.product_id == i.id]]))
-        sotogirlik = int(sum([i.weight for i in [k for k in all_income_sotuvchi if k.product_id == i.id]]))
-        if soni > sotilganlari:
-            datam.append(
-                {'name': i.name,
-                 'id': i.id
-                 }
-            )
-        jamiqolganson += (soni - sotilganlari)
-        jamiogirlik += (ogirligi - sotogirlik)
-
+    jami_gush = IncomeSotuvchi.objects.aggregate(Sum('weight'))['weight__sum']
     return render(request, 'bozorchiqim.html',
                   {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar,
                    'mahsulotlar': datam,
@@ -928,9 +909,9 @@ class BazarChiqimCreateView(CreateView):
     template_name = 'bozor-chiqim-add.html'
     form_class = BazarChiqimForm
     model = IncomeSotuvchi
+
     def get_queryset(self):
         return self.model.objects.all()
-
 
     def get_success_url(self):
         return reverse('bozorchiqim')

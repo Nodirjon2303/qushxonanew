@@ -1,6 +1,7 @@
 from django.db.models import Sum
 from django.forms import ModelForm
-from .models import IncomeBazarOther, IncomeSotuvchi, IncomeClient, Product, BazarAllIncomeStock
+from .models import IncomeBazarOther, IncomeSotuvchi, IncomeClient, Product, BazarAllIncomeStock, ExpenseClient, \
+    ExpenseSotuvchi
 from django import forms
 from django.forms import ValidationError
 
@@ -42,21 +43,37 @@ class BozorBozorIncomeForm(ModelForm):
 class BazarChiqimForm(ModelForm):
     payed_amount = forms.IntegerField(required=False, label='Mijozning To\'lagan summasi')
     weight_res = forms.CharField(label="Mahsulot og'irligi")
+    weight = forms.FloatField(required=False, label='Mahsulot og\'irligi', widget=forms.HiddenInput(), initial=2.5)
 
     class Meta:
         model = IncomeSotuvchi
-        fields = ['sotuvchi', 'product', 'quantity', 'weight_res', 'weight', 'price', 'payed_amount']
+        fields = ['sotuvchi', 'product', 'source',  'quantity', 'weight_res', 'weight', 'price', 'payed_amount']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        try:
+            weight = sum([int(i) for i in self.cleaned_data['weight_res'].split('+') if i])
+        except ValueError:
+            raise ValidationError('Og\'irligi to\'g\'ri kiriting')
+        cleaned_data['weight'] = weight
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=True)
+        print(type(instance), instance)
+        if self.cleaned_data['payed_amount']:
+            ExpenseSotuvchi.objects.create(
+                income_sotuvchi=instance,
+                amount=self.cleaned_data['payed_amount']
+            )
+        return instance
+
+
 
     def clean_weight(self):
         if 'product' not in self.cleaned_data or (
                 'weight' not in self.cleaned_data) or 'weight_res' not in self.cleaned_data:
             raise ValidationError("Iltimos mahsulot va uning og'irligini kiriting")
-        try:
-            weight = sum([int(i) for i in self.cleaned_data['weight_res'].split('+') if i])
-        except ValueError:
-            raise ValidationError('Og\'irligi to\'g\'ri kiriting')
-        if weight != self.cleaned_data['weight']:
-            raise ValidationError('Og\'irligi to\'g\'ri kiriting')
         if self.cleaned_data['weight'] <= self.products[self.cleaned_data['product'].id]:
             return self.cleaned_data['product']
         else:
@@ -69,6 +86,7 @@ class BazarChiqimForm(ModelForm):
         self.fields['product'].label = "Mahsulot"
         self.fields['quantity'].label = "Mahsulot soni"
         self.fields['weight'].label = "Mahsulot og'irligi"
+        self.fields['source'].label = "Qushxonadan yoki bozordan"
 
         # styling fields
         self.fields['sotuvchi'].widget.attrs.update({'class': 'form-control'})
@@ -79,7 +97,7 @@ class BazarChiqimForm(ModelForm):
         field.widget = field.hidden_widget()
         self.fields['price'].widget.attrs.update({'class': 'form-control'})
         self.fields['payed_amount'].widget.attrs.update({'class': 'form-control'})
-
+        self.fields['source'].widget.attrs.update({'class': 'form-control'})
         # PLACEHOLDER
         self.fields['sotuvchi'].widget.attrs.update({'placeholder': 'Mijozni tanlang'})
         self.fields['product'].widget.attrs.update({'placeholder': 'Mahsulotni tanlang'})

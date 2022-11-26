@@ -17,6 +17,11 @@ class Product(models.Model):
         return self.name
 
 
+class BazarSource(models.Choices):
+    bozor = 'bozor'
+    qushxona = 'qushxona'
+
+
 class Client(models.Model):
     full_name = models.CharField(max_length=250, null=True, blank=True, verbose_name="F.I.O")
     address = models.CharField(max_length=225, null=True, blank=True, verbose_name="Manzil")
@@ -132,7 +137,8 @@ class IncomeSotuvchi(models.Model):
     status = models.CharField(max_length=88, null=True, blank=True,
                               choices=[("progress", "Jarayonda"), ("completed", "yakunlandi")], default='progress',
                               verbose_name="Holati")
-
+    source = models.CharField(max_length=125, verbose_name="Manba",
+                              choices=BazarSource.choices, default=BazarSource.qushxona)
     class Meta:
         verbose_name = "Bozor sotuvchi sotib olgan mahsuloti"
         verbose_name_plural = "Bozor sotuvchilari sotib olgan mahsulolari"
@@ -261,11 +267,6 @@ class Xarajat(models.Model):
 
     def __str__(self):
         return self.comment
-
-
-class BazarSource(models.Choices):
-    bozor = 'bozor'
-    qushxona = 'qushxona'
 
 
 class BazarAllIncomeStock(models.Model):
