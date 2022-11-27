@@ -769,7 +769,6 @@ def adminchiqimView(request):
     return render(request, 'adminchiqim.html', {'chiqimlar': data, 'jami': Jami, 'data': datab})
 
 
-@admin_only
 def adduserView(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -785,7 +784,7 @@ def adduserView(request):
             client = Client(full_name=fullname, address=address, phone=phone, role=role)
             client.save()
         return JsonResponse({'data': 'ok'})
-    users = Client.objects.all()
+    users = Client.objects.all().order_by('full_name')
     return render(request, 'adminadduser.html', {'users': users})
 
 
