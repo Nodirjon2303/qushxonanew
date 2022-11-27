@@ -862,9 +862,6 @@ def bozorchiqimView(request):
         income = IncomeSotuvchi.objects.create(sotuvchi_id=sotuvchi, product_id=mahsulot, quantity=quantity,
                                                weight=massa,
                                                price=price)
-        text = f"Sotuvchi: {income.sotuvchi.full_name}\nOg'irligi: {weight} = {massa}kg\nSoni: {quantity}ta \nNarxi(1 kg) : {price}\nJami: {massa * price}\nSanasi:{datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}"
-        requests.post(
-            f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
 
         if tulov:
             ExpenseSotuvchi.objects.create(income_sotuvchi=income, amount=int(tulov))

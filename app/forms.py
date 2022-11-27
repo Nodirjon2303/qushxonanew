@@ -1,5 +1,8 @@
+import requests
 from django.db.models import Sum
 from django.forms import ModelForm
+from django.utils import timezone
+
 from .models import IncomeBazarOther, IncomeSotuvchi, IncomeClient, Product, BazarAllIncomeStock, ExpenseClient, \
     ExpenseSotuvchi
 from django import forms
@@ -66,6 +69,11 @@ class BazarChiqimForm(ModelForm):
                 income_sotuvchi=instance,
                 amount=self.cleaned_data['payed_amount']
             )
+
+        text = f"Sotuvchi: {instance.client.full_name}\nOg'irligi: {self.cleaned_data['weight_res']} = {self.cleaned_data['weight']}kg\nSoni: {self.cleaned_data['quantity']}ta \nNarxi(1 kg) : {self.cleaned_data['price']}\nJami: {self.cleaned_data['weight'] * self.cleaned_data['price']}\nSanasi:{timezone.now().strftime('%d-%m-%Y %H:%M')}"
+        requests.post(
+            f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
+
         return instance
 
     def clean_weight(self):
