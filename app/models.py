@@ -2,6 +2,7 @@ import datetime
 
 import django
 import idna
+import requests
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -224,6 +225,22 @@ class ExpenseSotuvchi(models.Model):
     class Meta:
         verbose_name = "Bozor sotuvchilari to'lovi"
         verbose_name_plural = "Bozor sotuvchilari to'lovlari"
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        super(ExpenseSotuvchi, self).save(force_insert, force_update, using, update_fields)
+        try:
+            text = f"Sotuvchidan to'lov!!!\n" \
+                   f"Sotuvchining ismi: {self.income_sotuvchi.sotuvchi.full_name}\n" \
+                   f"Tulov miqdori: {str(self.amount)[:-3] + ' ' + str(self.amount)[-3:]}"
+            requests.post(
+                f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
+        except Exception as e:
+            print(e)
+
+
+
 
     def __str__(self):
         return f"{self.income_sotuvchi}  {self.amount}  {self.created_date}"

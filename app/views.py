@@ -911,6 +911,17 @@ class BazarChiqimCreateView(CreateView):
     def get_queryset(self):
         return self.model.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super(BazarChiqimCreateView, self).get_context_data(**kwargs)
+        context['available_products'] = Product.objects.filter(bazarallincomestock__gte=1).annotate(
+            total_weight=Sum('bazarallincomestock__weight'),
+            total_quantity=Sum('bazarallincomestock__quantity')
+        )
+        for i in context['available_products']:
+            i.total_weight -= IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('weight'))['weight__sum'] or 0
+            i.total_quantity -= IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return context
+
     def get_success_url(self):
         return reverse('bozorchiqim')
 

@@ -59,6 +59,11 @@ class BazarChiqimForm(ModelForm):
         except ValueError:
             raise ValidationError('Og\'irligi to\'g\'ri kiriting')
         cleaned_data['weight'] = weight
+        if self.cleaned_data['weight'] > self.products.filter(
+                id=self.cleaned_data['product'].id).first().total_weight:
+            raise ValidationError(
+                "Sizda ushbu mahsulotdan {} kg mavjud".format(self.products.filter(
+                    id=self.cleaned_data['product'].id).first().total_weight))
         return cleaned_data
 
     def save(self, commit=True):
@@ -69,10 +74,13 @@ class BazarChiqimForm(ModelForm):
                 income_sotuvchi=instance,
                 amount=self.cleaned_data['payed_amount']
             )
+        try:
+            text = f"Sotuvchi: {instance.sotuvchi.full_name}\nOg'irligi: {self.cleaned_data['weight_res']} = {self.cleaned_data['weight']}kg\nSoni: {self.cleaned_data['quantity']}ta \nNarxi(1 kg) : {self.cleaned_data['price']}\nJami: {self.cleaned_data['weight'] * self.cleaned_data['price']}\nSanasi:{timezone.now().strftime('%d-%m-%Y %H:%M')}"
+            requests.post(
+                f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
 
-        text = f"Sotuvchi: {instance.client.full_name}\nOg'irligi: {self.cleaned_data['weight_res']} = {self.cleaned_data['weight']}kg\nSoni: {self.cleaned_data['quantity']}ta \nNarxi(1 kg) : {self.cleaned_data['price']}\nJami: {self.cleaned_data['weight'] * self.cleaned_data['price']}\nSanasi:{timezone.now().strftime('%d-%m-%Y %H:%M')}"
-        requests.post(
-            f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
+        except Exception as e:
+            print(e)
 
         return instance
 
@@ -80,11 +88,13 @@ class BazarChiqimForm(ModelForm):
         if 'product' not in self.cleaned_data or (
                 'weight' not in self.cleaned_data) or 'weight_res' not in self.cleaned_data:
             raise ValidationError("Iltimos mahsulot va uning og'irligini kiriting")
-        if self.cleaned_data['weight'] <= self.products[self.cleaned_data['product'].id]:
-            return self.cleaned_data['product']
-        else:
+
+        if self.cleaned_data['quantity'] > self.products.filter(
+                id=self.cleaned_data['product'].id).first().total_quantity:
             raise ValidationError(
-                "Sizda ushbu mahsulotdan {} kg mavjud".format(self.products[self.cleaned_data['product'].id]))
+                "Sizda ushbu mahsulotdan {} ta mavjud".format(self.products.filter(
+                    id=self.cleaned_data['product'].id).first().total_quantity))
+        return self.cleaned_data['product']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -117,21 +127,16 @@ class BazarChiqimForm(ModelForm):
 
         # updating client and product querysets
         self.fields['sotuvchi'].queryset = self.fields['sotuvchi'].queryset.filter(role='client').order_by('full_name')
-        products_income = BazarAllIncomeStock.objects.all().values('product', 'weight')
-        products_expense = IncomeSotuvchi.objects.all().values('product', 'weight')
-        product_income_res = []
-        for i in products_income.distinct('product'):
-            product_income_res.append({
-                'product': i['product'],
-                'weight': sum([j['weight'] for j in products_income.filter(product=i['product'])])
-            })
-        products_income = product_income_res
-        products = {
-            product['product']: product['weight'] - (products_expense.filter(product=product['product']).aggregate(
-                Sum('weight'))['weight__sum'] or 0) for product in products_income
-        }
+        products = Product.objects.filter(bazarallincomestock__gte=1).annotate(
+            total_weight=Sum('bazarallincomestock__weight'),
+            total_quantity=Sum('bazarallincomestock__quantity')
+        )
+        for i in products:
+            i.total_weight -= (IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('weight'))['weight__sum'] or 0)
+            i.total_quantity -= (IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('quantity'))[
+                                     'quantity__sum'] or 0)
         self.products = products
-        self.fields['product'].queryset = Product.objects.filter(id__in=products.keys()).order_by('name')
+        self.fields['product'].queryset = products
 
 
 class SotuvchiAddPaymentForm(ModelForm):
