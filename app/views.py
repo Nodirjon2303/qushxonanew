@@ -784,14 +784,20 @@ def adduserView(request):
             client = Client(full_name=fullname, address=address, phone=phone, role=role)
             client.save()
         return JsonResponse({'data': 'ok'})
-    users = Client.objects.all().order_by('full_name')
     if 'admin' in request.user.username:
+        user_type = 'admin'
         template = 'adminadduser.html'
+        users = Client.objects.all().order_by('full_name')
     elif 'bozor' in request.user.username:
+        user_type = 'bozor'
         template = 'bozor_adduser.html'
+        users = Client.objects.filter(role='sotuvchi').order_by('full_name')
     else:
+        user_type = 'qushxona'
         template = 'qushxona_adduser.html'
-    return render(request, template, {'users': users})
+        users = Client.objects.filter(~Q(role='sotuvchi')).order_by('full_name')
+
+    return render(request, template, {'users': users, 'user_type': user_type})
 
 
 @qushxona_only
