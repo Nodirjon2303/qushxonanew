@@ -5,7 +5,7 @@ import requests
 import xlwt
 from django.contrib.auth import authenticate, login, logout
 from django.db import connection
-from django.db.models import Q, F, Sum, OuterRef, FloatField, When, Case, Subquery
+from django.db.models import Q, F, Sum, OuterRef, FloatField, When, Case, Subquery, IntegerField, ExpressionWrapper
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -810,8 +810,9 @@ class AdminQushxonaKirimListView(ListView):
         row_num = 0
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
-        columns = ['N', "Mijoz", "Sotib olingan mahsulot", "Soni", "Massasi", "Narxi", "Umumiy summa", "Umumiy to'langan",
-                      "Umumiy qarz", "Qabul qilingan summa", "Qabul qilingan sana"]
+        columns = ['N', "Mijoz", "Sotib olingan mahsulot", "Soni", "Massasi", "Narxi", "Umumiy summa",
+                   "Umumiy to'langan",
+                   "Umumiy qarz", "Qabul qilingan summa", "Qabul qilingan sana"]
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)
         font_style = xlwt.XFStyle()
@@ -833,15 +834,18 @@ class AdminQushxonaKirimListView(ListView):
             ws.write(row_num, 10, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
         wb.save(response)
         return response
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return super().get(request, *args, **kwargs)
         else:
             return redirect('login')
 
+
 class AdminQushxonaKirimExcelView(AdminQushxonaKirimListView):
     def get(self, request, *args, **kwargs):
         return self.to_excel()
+
 
 @admin_only
 def adminchiqimView(request):
@@ -872,6 +876,27 @@ def adminchiqimView(request):
         Jami += i.amount
         sanoq += 1
     return render(request, 'adminchiqim.html', {'chiqimlar': data, 'jami': Jami, 'data': datab})
+
+
+class AdminChiqimListView(ListView):
+    model = IncomeDehqon
+    template_name = 'adminchiqim.html'
+    context_object_name = 'chiqimlar'
+
+    def get_queryset(self):
+        return IncomeDehqon.objects.all().select_related('dehqon_product__dehqon').order_by('-created_date')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = ExpenseDehqon.objects.all().annotate(
+            sotilgan_massa=Sum('incomeclients__weight', output_field=IntegerField()),
+            sotilgan_miqdor=Sum('incomeclients__quantity'),
+            all_amount=(F('weight') * F('price')),
+            all_payment=Sum('incomedehqon__amount'),
+            all_debt=ExpressionWrapper(F('all_amount') - F('all_payment'), output_field=IntegerField()),
+        ).filter(all_amount__gt=10000).order_by('-created_date')
+        context['jami_dehqon'] = self.get_queryset().aggregate(Sum('amount'))['amount__sum']
+        return context
 
 
 def adduserView(request):

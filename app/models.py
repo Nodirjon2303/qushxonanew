@@ -78,7 +78,7 @@ class IncomeClient(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True,
                                related_name='qaysi client oldi+', verbose_name="Mijoz")
     product_dehqon = models.ForeignKey(ExpenseDehqon, on_delete=models.SET_NULL, null=True,
-                                       related_name='qaysi dehqonni qoyi+', blank=True,
+                                       related_name='incomeclients', blank=True,
                                        verbose_name="Dehqonning mahsuloti")
     quantity = models.IntegerField(null=True, blank=True, verbose_name="Soni")
     weight = models.FloatField(null=True, blank=True, default=0, verbose_name="Og'irligi")
