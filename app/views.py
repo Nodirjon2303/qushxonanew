@@ -785,7 +785,13 @@ def adduserView(request):
             client.save()
         return JsonResponse({'data': 'ok'})
     users = Client.objects.all().order_by('full_name')
-    return render(request, 'adminadduser.html', {'users': users})
+    if 'admin' in request.user.username:
+        user_role = 'admin'
+    elif 'bozor' in request.user.username:
+        user_role = 'bozor'
+    else:
+        user_role = 'qushxona'
+    return render(request, 'adminadduser.html', {'users': users, "user_role": user_role})
 
 
 @qushxona_only
@@ -918,7 +924,8 @@ class BazarChiqimCreateView(CreateView):
         )
         for i in context['available_products']:
             i.total_weight -= IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('weight'))['weight__sum'] or 0
-            i.total_quantity -= IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('quantity'))['quantity__sum'] or 0
+            i.total_quantity -= IncomeSotuvchi.objects.filter(product=i).aggregate(Sum('quantity'))[
+                                    'quantity__sum'] or 0
         return context
 
     def get_success_url(self):
