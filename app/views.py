@@ -786,12 +786,12 @@ def adduserView(request):
         return JsonResponse({'data': 'ok'})
     users = Client.objects.all().order_by('full_name')
     if 'admin' in request.user.username:
-        user_role = 'admin'
+        template = 'adminadduser.html'
     elif 'bozor' in request.user.username:
-        user_role = 'bozor'
+        template = 'bozor_adduser.html'
     else:
-        user_role = 'qushxona'
-    return render(request, 'adminadduser.html', {'users': users, "user_role": user_role})
+        template = 'qushxona_adduser.html'
+    return render(request, template, {'users': users})
 
 
 @qushxona_only

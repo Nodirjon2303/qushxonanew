@@ -1,0 +1,133 @@
+{% extends 'bozorbase.html' %}
+{% block content %}
+
+
+
+
+    <div class="limiter">
+
+
+        <div class="container-table100">
+            <div class="wrap-table100">
+
+
+                <div class="table100 ver1 m-b-110">
+                    <div class=" table100-head">
+                        <table>
+                            <thead>
+                            <tr class="row100 head">
+                                <th class="cell100 column1">№</th>
+                                <th class="cell100 column3">Ism familyasi</th>
+                                <th class="cell100 column3">Phone</th>
+                                <th class="cell100 column3">Address</th>
+                                <th class="cell100 column3">Role</th>
+                            </tr>
+
+                            </thead>
+
+                        </table>
+                    </div>
+
+
+                    <div class="table100-body js-pscroll">
+
+                        <table id="qushxona_table">
+
+                            <tbody>
+                            {% for i in users %}
+
+                                <tr>
+                                    <td class="cell100 column1">{{ i.id }}</td>
+                                    <td class="cell100 column3">{{ i.full_name }}</td>
+                                    <td class="cell100 column3">{{ i.phone }}</td>
+                                    <td class="cell100 column3">{{ i.address }}</td>
+                                    <td class="cell100 column3">{{ i.role }}</td>
+                                </tr>
+                            {% endfor %}
+
+                            <tr>
+                                <td>№</td>
+                                <td><input id="fullname" type="text" placeholder="F.I.SH ni kiriting"></td>
+                                <td><input id="phone" type="number" placeholder="telefon raqamini kiriting"></td>
+                                <td><input id="address" type="text" placeholder="Manzilini kiriting"></td>
+                                <td><select name="roles" id="roles" class="form-select">
+                                    <option value="dehqon">Dehqon</option>
+                                    <option value="client">Qushxona Klienti(Optomchi)</option>
+                                    <option value="sotuvchi">Bozordagi sotuvchi</option>
+                                    <option value="kallahasb">Kalla hasb oluvchi sotuvchi</option>
+                                    <option value="Teri">Teri oluvchi sotuvchi</option>
+                                </select></td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+
+                    </div>
+
+                </div>
+
+
+                <button onclick="usersave()" class="button_save">Save</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div class="qushxona__table1">
+        <table class="qushxona_table">
+            <tr>
+                <th>№</th>
+                <th>ism familyasi</th>
+                <th>phone</th>
+                <th>address</th>
+                <th>role</th>
+            </tr>
+            {% for i in users %}
+                <tr>
+                <td>{{ i.id }}</td>
+                <td>{{ i.full_name }}</td>
+                <td>{{ i.phone }}</td>
+                <td>{{ i.address }}</td>
+                <td>{{ i.role }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>№</td>
+                <td><input id="fullname" type="text"></td>
+                <td><input id="phone" type="number"></td>
+                <td><input id="address" type="text"></td>
+                <td><select name="roles" id="roles">
+                    <option value="dehqon">Dehqon</option>
+                    <option value="client">Qushxona Klienti(Optomchi)</option>
+                    <option value="sotuvchi">Bozordagi sotuvchi</option>
+                    <option value="kallahasb">Kalla hasb oluvchi sotuvchi</option>
+                    <option value="Teri">Teri oluvchi sotuvchi</option>
+                </select></td>
+            </tr>
+        </table>
+    <button onclick="usersave()">Save</button>
+    </div> -->
+
+{% endblock %}
