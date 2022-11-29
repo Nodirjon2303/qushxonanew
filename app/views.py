@@ -2,13 +2,16 @@ import json
 from functools import wraps
 
 import requests
+import xlwt
 from django.contrib.auth import authenticate, login, logout
 from django.db import connection
-from django.db.models import Q, F, Sum
+from django.db.models import Q, F, Sum, OuterRef, FloatField, When, Case, Subquery
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.views import View
+from sql_util.aggregates import SubqueryAggregate
 
 from .forms import BozorBozorIncomeForm, BazarChiqimForm, SotuvchiAddPaymentForm
 from .models import *
@@ -738,6 +741,108 @@ def adminkirimView(request):
     return render(request, 'adminkirim.html', {'kirimlar': data, 'jami': Jami})
 
 
+class AdminQushxonaKirimListView(ListView):
+    model = ExpenseClient
+    template_name = 'adminkirim.html'
+    context_object_name = 'kirimlar'
+
+    def get_queryset(self):
+        return ExpenseClient.objects.all().select_related(
+            'income_client__client', 'income_client__product_dehqon__dehqon', 'income_client__product_dehqon__product')
+
+    def get_context_data(self, **kwargs):
+        import datetime as dt
+        context = super().get_context_data(**kwargs)
+        self.queryset = self.get_queryset()
+        try:
+            from_date = dt.datetime.strptime(self.request.GET.get('from_date'), '%Y-%m-%d') if self.request.GET.get(
+                'from_date') else None
+        except:
+            from_date = None
+        try:
+            to_date = dt.datetime.strptime(self.request.GET.get('to_date'), '%Y-%m-%d') if self.request.GET.get(
+                'to_date') else None
+        except:
+            to_date = None
+        if from_date:
+            self.queryset = self.queryset.filter(created_date__gte=from_date)
+        if to_date:
+            self.queryset = self.queryset.filter(created_date__lte=to_date)
+        print(self.queryset, from_date, to_date)
+        context['object_list'] = self.queryset
+        context['jami'] = self.queryset.aggregate(Sum('amount'))['amount__sum']
+        context['object_list'] = context['object_list'].annotate(
+            all_amount=(F('income_client__weight') * F('income_client__price')), )
+        for i in context['object_list']:
+            i.all_payment = ExpenseClient.objects.filter(income_client=i.income_client).aggregate(Sum('amount'))[
+                'amount__sum']
+            i.all_debt = i.all_amount - i.all_payment
+        print(context['object_list'])
+        return context
+
+    def to_excel(self):
+        import datetime as dt
+        self.queryset = self.get_queryset()
+        try:
+            from_date = dt.datetime.strptime(self.request.GET.get('from_date'), '%Y-%m-%d') if self.request.GET.get(
+                'from_date') else None
+        except:
+            from_date = None
+        try:
+            to_date = dt.datetime.strptime(self.request.GET.get('to_date'), '%Y-%m-%d') if self.request.GET.get(
+                'to_date') else None
+        except:
+            to_date = None
+        if from_date:
+            self.queryset = self.queryset.filter(created_date__gte=from_date)
+        if to_date:
+            self.queryset = self.queryset.filter(created_date__lte=to_date)
+        self.queryset = self.queryset.annotate(
+            all_amount=(F('income_client__weight') * F('income_client__price')), )
+        print(from_date, to_date)
+
+        data = self.queryset
+        print(self.queryset, from_date, to_date)
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="kirimlar_{timezone.now().strftime("%d.%m.%Y")}.xls"'
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Kirimlar')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        columns = ['N', "Mijoz", "Sotib olingan mahsulot", "Soni", "Massasi", "Narxi", "Umumiy summa", "Umumiy to'langan",
+                      "Umumiy qarz", "Qabul qilingan summa", "Qabul qilingan sana"]
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        for obj in data:
+            obj.all_payment = ExpenseClient.objects.filter(income_client=obj.income_client).aggregate(Sum('amount'))[
+                'amount__sum']
+            obj.all_debt = obj.all_amount - obj.all_payment
+            row_num += 1
+            ws.write(row_num, 0, row_num, font_style)
+            ws.write(row_num, 1, obj.income_client.client.full_name, font_style)
+            ws.write(row_num, 2, obj.income_client.product_dehqon.product.name, font_style)
+            ws.write(row_num, 3, obj.income_client.quantity, font_style)
+            ws.write(row_num, 4, obj.income_client.weight, font_style)
+            ws.write(row_num, 5, obj.income_client.price, font_style)
+            ws.write(row_num, 6, obj.all_amount, font_style)
+            ws.write(row_num, 7, obj.all_payment, font_style)
+            ws.write(row_num, 8, obj.all_debt, font_style)
+            ws.write(row_num, 9, obj.amount, font_style)
+            ws.write(row_num, 10, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
+        wb.save(response)
+        return response
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect('login')
+
+class AdminQushxonaKirimExcelView(AdminQushxonaKirimListView):
+    def get(self, request, *args, **kwargs):
+        return self.to_excel()
+
 @admin_only
 def adminchiqimView(request):
     chiqimlar = IncomeDehqon.objects.filter(created_date__date=datetime.date.today()).select_related(
@@ -911,7 +1016,7 @@ def bozorchiqimView(request):
                   {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar,
                    'mahsulotlar': datam,
                    'income_bazar_kg': income_bazar_kg, 'income_bazar_soni': income_bazar_soni,
-                   'bazadaqolganson': jamiqolganson, 'qolganogirlik': round(jamiogirlik,1)})
+                   'bazadaqolganson': jamiqolganson, 'qolganogirlik': round(jamiogirlik, 1)})
 
 
 class BazarChiqimCreateView(CreateView):

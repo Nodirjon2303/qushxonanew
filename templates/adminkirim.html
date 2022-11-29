@@ -1,80 +1,96 @@
 {% extends 'adminbase.html' %}
 {% block content %}
-{% load static %} 
+    {% load static %}
 
 
-    
-    <div class="limiter">
-        <div class="row mt-1">
-            <div class="col-sm-2">
-                <select class="form-select " aria-label="Disabled select example" name="daychoose" id="daychoose" onchange="changedayadmin('kirim')">
-                    <option value="1">Kunlik</option>
-                    <option value="7">Haftalik</option>
-                    <option value="30">Oylik</option>
-                    <option value="365">yillik</option>
-                </select>
-            </div>
-            <div class="col-sm-5"></div>
-            <div class="col-sm-5"></div>
-          </div>
-        
-        <div class="container-table100">
-            <div class="wrap-table100">
-    
-                
-    
-                <div class="table100 ver1 m-b-110">
-                    <div class=" table100-head">
-                        <table >
-                            <thead>
-                                <tr class="row100 head">
-                                    <th class="cell100 column1">№</th>
-                                    <th class="cell100 column3">Dehqon</th>
-                                    <th class="cell100 column3">summa</th>
-                                    <th class="cell100 column3">Sanasi</th>
-                                </tr>
-    
-                            </thead>
-                            
-                        </table>
-                    </div>
-    
-    
-    
-                    <div class="table100-body js-pscroll">
-                        
-                        <table id="qushxona_table">
-                            
-                            <tbody>
-                                {% for i in kirimlar %}
-                            
-                                <tr >
-                                    <td class="cell100 column1">{{ i.n }}</td>
-                                    <td class="cell100 column3">{{ i.dehqon }}</td>
-                                    <td class="cell100 column3">{{ i.summa }}</td>
-                                    <td class="cell100 column3">{{ i.date }}</td>
-                                </tr>
-                                {% endfor %}
-                            
-                            </tbody>
-                            
-                        </table>
-                        
-                        
-    
-                    </div>
-                            
-                </div>
-    
-                <div id="jamisi" class="jami_qarz">
-                
-                    Jami: {{ jami }}
-               </div>
-    
-            </div>
-        </div>
+
+    <style>
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #customers tr:hover {
+            background-color: #ddd;
+        }
+
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+
+
+
+    <div style="background-color: white; margin-left: 25px; margin-top: 35px; margin-right: 25px" >
+        <form action="" method="get">
+            <input type="date"  name="from_date" placeholder="Sanadan">
+            <input type="date"  name="to_date" placeholder="Sanagacha">
+            <button  type="submit" class="btn btn-outline-success">Saralash</button>
+        </form>
+
+        <h1 style="text-align: center">Qushxonaga kirim</h1>
+        <button type="button" class="btn btn-outline-success" style="text-align: right" onclick="window.location.href='/adminkirim-excel/'+'?'+window.location.href.split('?')[1]">Download</button>
+
+        <table id="customers">
+            <tr>
+                <th>№</th>
+                <th>Mijoz</th>
+                <th>Sotib olgan mahsuloti</th>
+                <th>Soni</th>
+                <th>Massasi</th>
+                <th>Narxi (1kg)</th>
+                <th>Jami Summa</th>
+                <th>Jami to'lov</th>
+                <th>Qarz</th>
+                <th>To'lov</th>
+                <th>To'lov Sanasi</th>
+            </tr>
+            {% for i in object_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.income_client.client.full_name }}</td>
+                    <td>{{ i.income_client.product_dehqon.product.name }}</td>
+                    <td>{{ i.income_client.quantity }}</td>
+                    <td>{{ i.income_client.weight }}</td>
+                    <td>{{ i.income_client.price }}</td>
+                    <td>{{ i.all_amount }}</td>
+                    <td>{{ i.all_payment }}</td>
+                    <td>{{ i.all_debt }}</td>
+                    <td>{{ i.amount }}</td>
+                    <td>{{ i.created_date|date:'d.m.Y' }}</td>
+                </tr>
+
+            {% endfor %}
+            <tr>
+                <td>Jami</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{ jami }}</td>
+                <td></td>
+            </tr>
+        </table>
     </div>
 
-    
+
 
 {% endblock %}
