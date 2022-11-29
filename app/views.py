@@ -911,7 +911,7 @@ def bozorchiqimView(request):
                   {'gush': int(jami_gush), 'soni': jami_soni, 'data': data, 'sotuvchilar': sotuvchilar,
                    'mahsulotlar': datam,
                    'income_bazar_kg': income_bazar_kg, 'income_bazar_soni': income_bazar_soni,
-                   'bazadaqolganson': jamiqolganson, 'qolganogirlik': jamiogirlik})
+                   'bazadaqolganson': jamiqolganson, 'qolganogirlik': round(jamiogirlik,1)})
 
 
 class BazarChiqimCreateView(CreateView):
