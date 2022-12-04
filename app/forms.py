@@ -68,7 +68,6 @@ class BazarChiqimForm(ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=True)
-        print(type(instance), instance)
         if self.cleaned_data['payed_amount']:
             ExpenseSotuvchi.objects.create(
                 income_sotuvchi=instance,

@@ -45,37 +45,29 @@
         <h1 style="text-align: center">Qushxonaga dehqonlarga to'lovlar</h1>
         <h6 style="text-align: right">Jami xarajat miqdori: {{ jami_xarajat_amount }}</h6>
         <button type="button" class="btn btn-outline-success" style="text-align: right"
-                onclick="window.location.href='/adminchiqim-excel/'+'?'+window.location.href.split('?')[1]">Download
+                onclick="window.location.href='/admin-bozor-chiqim-excel/'+'?'+window.location.href.split('?')[1]">Download
         </button>
 
         <table id="customers">
             <tr>
                 <th>№</th>
-                <th>Dehqon</th>
+                <th>Mijoz</th>
                 <th>Mahsuloti</th>
                 <th>Soni</th>
-                <th>Taxminiy Massasi</th>
-                <th>Sotilgan miqdori</th>
-                <th>Sotilgan massasi</th>
+                <th>Massasi</th>
                 <th>Narxi (1kg)</th>
                 <th>Jami Summa</th>
-                <th>Jami to'lov</th>
-                <th>Qarz</th>
                 <th>To'lov Sanasi</th>
             </tr>
             {% for i in data %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ i.dehqon.full_name }}</td>
+                    <td>{{ i.client.full_name }}</td>
                     <td>{{ i.product.name }}</td>
                     <td>{{ i.quantity }}</td>
                     <td>{{ i.weight }}</td>
-                    <td>{{ i.sotilgan_miqdor }}</td>
-                    <td>{{ i.sotilgan_massa }}</td>
                     <td>{{ i.price }}</td>
                     <td>{{ i.all_amount }}</td>
-                    <td>{{ i.all_payment }}</td>
-                    <td>{{ i.all_debt }}</td>
                     <td>{{ i.created_date|date:'d.m.Y' }}</td>
                 </tr>
 
@@ -87,11 +79,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td></td>
                 <td>{{ all_amount }}</td>
-                <td>{{ all_payment }}</td>
-                <td>{{ all_debt }}</td>
                 <td></td>
             </tr>
         </table>

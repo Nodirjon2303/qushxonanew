@@ -44,7 +44,7 @@
 
         <h1 style="text-align: center">Qushxonaga kirim</h1>
         <h6 style="text-align: right">Jami Kirim: {{ jami }}</h6>
-        <button type="button" class="btn btn-outline-success" style="text-align: right" onclick="window.location.href='/adminkirim-excel/'+'?'+window.location.href.split('?')[1]">Download</button>
+        <button type="button" class="btn btn-outline-success" style="text-align: right" onclick="window.location.href='/admin-bozor-kirim-excel/'+'?'+window.location.href.split('?')[1]">Download</button>
 
         <table id="customers">
             <tr>
@@ -63,11 +63,11 @@
             {% for i in object_list %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ i.income_client.client.full_name }}</td>
-                    <td>{{ i.income_client.product_dehqon.product.name }}</td>
-                    <td>{{ i.income_client.quantity }}</td>
-                    <td>{{ i.income_client.weight }}</td>
-                    <td>{{ i.income_client.price }}</td>
+                    <td>{{ i.income_sotuvchi.sotuvchi.full_name }}</td>
+                    <td>{{ i.income_sotuvchi.product.name }}</td>
+                    <td>{{ i.income_sotuvchi.quantity }}</td>
+                    <td>{{ i.income_sotuvchi.weight }}</td>
+                    <td>{{ i.income_sotuvchi.price }}</td>
                     <td>{{ i.all_amount }}</td>
                     <td>{{ i.all_payment }}</td>
                     <td>{{ i.all_debt }}</td>

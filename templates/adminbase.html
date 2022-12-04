@@ -12,7 +12,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static "css/main.css" %}">
 </head>
-<body >
+<body>
 
 <script>
     function getCookie(name) {
@@ -41,18 +41,46 @@
                 <img src="{% static 'img/logom.png' %}" width="30" height="30" alt="">
             </a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'adminkirim' %}">Kirim</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Qushxona
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'adminkirim' %}">Kirim</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'adminchiqim' %}">Chiqim</a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'adminchiqim' %}">Chiqim</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Bozor
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page"
+                               href="{% url 'admin-bozor-kirim' %}">Kirim</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page"
+                               href="{% url 'admin-bozor-chiqim' %}">Chiqim</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'adduser' %}">user qo'shish</a>
                 </li>
             </ul>
             <form class="d-flex" method="get" action="/logout">
-                <button class="btn btn-outline-success" >Tizimdan chiqish</button>
+                <button class="btn btn-outline-success">Tizimdan chiqish</button>
             </form>
         </div>
     </div>

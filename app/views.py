@@ -241,7 +241,6 @@ class BozorBozorIncomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = IncomeBazarOther()
-        print(context)
         return context
 
     def get_queryset(self):
@@ -332,13 +331,12 @@ def clientPaymentView(request):
 
 @qushxona_only
 def incomeDehqonView(request):
-    print(len(connection.queries), "ta query")
 
     products = ExpenseDehqon.objects.filter(status='progress').select_related('dehqon', 'product').order_by('id')
     data = []
     dehqons = [i['id'] for i in products.values('id')]
     all_income_clients = IncomeClient.objects.filter(product_dehqon__dehqon_id__in=dehqons)
-    print(len(connection.queries), "ta query")
+    # print(len(connection.queries), "ta query")
     for i in products:
         data_products = [j for j in all_income_clients if j.product_dehqon == i]
         sotilganlari = sum([j.quantity for j in data_products])
@@ -357,7 +355,7 @@ def incomeDehqonView(request):
                 'id': i.id
             }
         )
-        print(len(connection.queries), "ta query")
+        # print(len(connection.queries), "ta query")
 
     return render(request, 'IncomeDehqon.html', {"data": data})
 
@@ -367,7 +365,7 @@ def SearchboxView(request):
         data = json.loads(request.body)
         dehqon = data['search']
         data = Client.objects.filter(Q(full_name__contains=f'{dehqon}') & (Q(role='dehqon') | Q(role='client')))
-        print(data)
+        # print(data)
         context = []
         for i in data:
             context.append({
@@ -602,7 +600,7 @@ def chiqimView(request):
 @qushxona_only
 def bronView(request):
     if request.method == 'POST':
-        print(len(connection.queries), "Ta query ishladi")
+        # print(len(connection.queries), "Ta query ishladi")
         mijoz = []
         mijozlar = Client.objects.filter(role='client')
         for i in mijozlar:
@@ -621,7 +619,7 @@ def bronView(request):
                     'name': f"{i.dehqon.full_name}ning {i.quantity - soni}ta {i.product.name}lari",
                     'id': i.id
                 })
-        print(len(connection.queries), "Ta query ishladi")
+        # print(len(connection.queries), "Ta query ishladi")
         return JsonResponse({
             'mijoz': mijoz,
             'product': product
@@ -768,7 +766,7 @@ class AdminQushxonaKirimListView(ListView):
             self.queryset = self.queryset.filter(created_date__gte=from_date)
         if to_date:
             self.queryset = self.queryset.filter(created_date__lte=to_date)
-        print(self.queryset, from_date, to_date)
+        # print(self.queryset, from_date, to_date)
         context['object_list'] = self.queryset
         context['jami'] = self.queryset.aggregate(Sum('amount'))['amount__sum']
         context['object_list'] = context['object_list'].annotate(
@@ -842,7 +840,112 @@ class AdminQushxonaKirimListView(ListView):
             return redirect('login')
 
 
+class AdminBozorKirimListView(ListView):
+    model = ExpenseSotuvchi
+    template_name = 'admin-bozor-kirim.html'
+
+    def get_queryset(self):
+        return ExpenseSotuvchi.objects.all()
+
+    def get_context_data(self, **kwargs):
+        import datetime as dt
+        context = super().get_context_data(**kwargs)
+        self.queryset = self.get_queryset()
+        try:
+            from_date = dt.datetime.strptime(self.request.GET.get('from_date'), '%Y-%m-%d') if self.request.GET.get(
+                'from_date') else None
+        except:
+            from_date = None
+        try:
+            to_date = dt.datetime.strptime(self.request.GET.get('to_date'), '%Y-%m-%d') if self.request.GET.get(
+                'to_date') else None
+        except:
+            to_date = None
+        if from_date:
+            self.queryset = self.queryset.filter(created_date__gte=from_date)
+        if to_date:
+            self.queryset = self.queryset.filter(created_date__lte=to_date)
+        print(self.queryset, from_date, to_date)
+        context['object_list'] = self.queryset
+        context['jami'] = self.queryset.aggregate(Sum('amount'))['amount__sum']
+        context['object_list'] = context['object_list'].annotate(
+            all_amount=(F('income_sotuvchi__weight') * F('income_sotuvchi__price')),
+        )
+        for i in context['object_list']:
+            i.all_payment = ExpenseSotuvchi.objects.filter(income_sotuvchi=i.income_sotuvchi).aggregate(Sum('amount'))[
+                'amount__sum']
+            i.all_debt = i.all_amount - i.all_payment
+        return context
+
+    def to_excel(self):
+        import datetime as dt
+        self.queryset = self.get_queryset()
+        try:
+            from_date = dt.datetime.strptime(self.request.GET.get('from_date'), '%Y-%m-%d') if self.request.GET.get(
+                'from_date') else None
+        except:
+            from_date = None
+        try:
+            to_date = dt.datetime.strptime(self.request.GET.get('to_date'), '%Y-%m-%d') if self.request.GET.get(
+                'to_date') else None
+        except:
+            to_date = None
+        if from_date:
+            self.queryset = self.queryset.filter(created_date__gte=from_date)
+        if to_date:
+            self.queryset = self.queryset.filter(created_date__lte=to_date)
+        self.queryset = self.queryset.annotate(
+            all_amount=(F('income_sotuvchi__weight') * F('income_sotuvchi__price')), )
+        # print(from_date, to_date)
+
+        data = self.queryset
+        # print(self.queryset, from_date, to_date)
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="kirimlar_{timezone.now().strftime("%d.%m.%Y")}.xls"'
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Kirimlar')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        columns = ['N', "Mijoz", "Sotib olingan mahsulot", "Soni", "Massasi", "Narxi", "Umumiy summa",
+                   "Umumiy to'langan",
+                   "Umumiy qarz", "Qabul qilingan summa", "Qabul qilingan sana"]
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        for obj in data:
+            obj.all_payment = \
+                ExpenseSotuvchi.objects.filter(income_sotuvchi=obj.income_sotuvchi).aggregate(Sum('amount'))[
+                    'amount__sum']
+            obj.all_debt = obj.all_amount - obj.all_payment
+            row_num += 1
+            ws.write(row_num, 0, row_num, font_style)
+            ws.write(row_num, 1, obj.income_sotuvchi.sotuvchi.full_name, font_style)
+            ws.write(row_num, 2, obj.income_sotuvchi.product.name, font_style)
+            ws.write(row_num, 3, obj.income_sotuvchi.quantity, font_style)
+            ws.write(row_num, 4, obj.income_sotuvchi.weight, font_style)
+            ws.write(row_num, 5, obj.income_sotuvchi.price, font_style)
+            ws.write(row_num, 6, obj.all_amount, font_style)
+            ws.write(row_num, 7, obj.all_payment, font_style)
+            ws.write(row_num, 8, obj.all_debt, font_style)
+            ws.write(row_num, 9, obj.amount, font_style)
+            ws.write(row_num, 10, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
+        wb.save(response)
+        return response
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect('login')
+
+
 class AdminQushxonaKirimExcelView(AdminQushxonaKirimListView):
+    def get(self, request, *args, **kwargs):
+        return self.to_excel()
+
+
+class AdminBozorKirimExcelView(AdminBozorKirimListView):
     def get(self, request, *args, **kwargs):
         return self.to_excel()
 
@@ -896,7 +999,177 @@ class AdminChiqimListView(ListView):
             all_debt=ExpressionWrapper(F('all_amount') - F('all_payment'), output_field=IntegerField()),
         ).filter(all_amount__gt=10000).order_by('-created_date')
         context['jami_dehqon'] = self.get_queryset().aggregate(Sum('amount'))['amount__sum']
+        context['otherexpenses'] = Xarajat.objects.filter(choise='qushxona')
+        context['jami_otherexpenses'] = context['otherexpenses'].aggregate(Sum('amount'))['amount__sum']
+        context['all_amount'] = context['data'].aggregate(Sum('all_amount'))['all_amount__sum']
+        context['all_payment'] = context['data'].aggregate(Sum('all_payment'))['all_payment__sum']
+        context['all_debt'] = context['data'].aggregate(Sum('all_debt'))['all_debt__sum']
+        context['jami_xarajat_amount'] = context['all_payment'] + context['jami_otherexpenses']
         return context
+
+    def to_excel(self):
+        import datetime as dt
+        self.queryset = ExpenseDehqon.objects.all().annotate(
+            sotilgan_massa=Sum('incomeclients__weight', output_field=IntegerField()),
+            sotilgan_miqdor=Sum('incomeclients__quantity'),
+            all_amount=(F('weight') * F('price')),
+            all_payment=Sum('incomedehqon__amount'),
+            all_debt=ExpressionWrapper(F('all_amount') - F('all_payment'), output_field=IntegerField()),
+        ).filter(all_amount__gt=10000).order_by('-created_date')
+        try:
+            from_date = dt.datetime.strptime(self.request.GET.get('from_date'), '%Y-%m-%d') if self.request.GET.get(
+                'from_date') else None
+        except:
+            from_date = None
+        try:
+            to_date = dt.datetime.strptime(self.request.GET.get('to_date'), '%Y-%m-%d') if self.request.GET.get(
+                'to_date') else None
+        except:
+            to_date = None
+        if from_date:
+            self.queryset = self.queryset.filter(created_date__gte=from_date)
+        if to_date:
+            self.queryset = self.queryset.filter(created_date__lte=to_date)
+        print(from_date, to_date)
+
+        data = self.queryset
+        print(self.queryset, from_date, to_date)
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="chiqimlaar_{timezone.now().strftime("%d.%m.%Y")}.xls"'
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('chiqimlar Dehqon')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        columns = ['N', "Dehqon", "Mahsuloti", "Soni", "Taxminiy Massasi", "Sotilgan miqdori", "Massasi",
+                   "Narxi(1 kg)", "Jami summasi", "Jami to'lov", "Qarz", "To'lov Sanasi"]
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        for obj in data:
+            # obj.all_payment = ExpenseClient.objects.filter(income_client=obj.income_client).aggregate(Sum('amount'))[
+            #     'amount__sum']
+            # obj.all_debt = obj.all_amount - obj.all_payment
+            row_num += 1
+            ws.write(row_num, 0, row_num, font_style)
+            ws.write(row_num, 1, obj.dehqon.full_name, font_style)
+            ws.write(row_num, 2, obj.product.name, font_style)
+            ws.write(row_num, 3, obj.quantity, font_style)
+            ws.write(row_num, 4, obj.weight, font_style)
+            ws.write(row_num, 5, obj.sotilgan_miqdor, font_style)
+            ws.write(row_num, 6, obj.sotilgan_massa, font_style)
+            ws.write(row_num, 7, obj.price, font_style)
+            ws.write(row_num, 8, obj.all_amount, font_style)
+            ws.write(row_num, 9, obj.all_payment, font_style)
+            ws.write(row_num, 10, obj.all_debt, font_style)
+            ws.write(row_num, 11, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
+        ws2 = wb.add_sheet('Xarajatlar Boshqa')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        columns = ['N', "Maqsadi", "Miqdori", "To'lov Sanasi"]
+        for col_num in range(len(columns)):
+            ws2.write(row_num, col_num, columns[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        for obj in Xarajat.objects.filter(choise='qushxona'):
+            row_num += 1
+            ws2.write(row_num, 0, row_num, font_style)
+            ws2.write(row_num, 1, obj.comment, font_style)
+            ws2.write(row_num, 2, obj.amount, font_style)
+            ws2.write(row_num, 3, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
+        wb.save(response)
+        return response
+
+
+class AdminBozorChiqimListView(ListView):
+    model = BazarAllIncomeStock
+    template_name = 'admin-bozor-chiqim.html'
+
+    def get_queryset(self):
+        return BazarAllIncomeStock.objects.all().order_by('-created_date')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = BazarAllIncomeStock.objects.all().annotate(
+            all_amount=F('weight') * F('price')
+        ).order_by('-created_date')
+        context['otherexpenses'] = Xarajat.objects.filter(choise='bozor')
+        context['jami_otherexpenses'] = context['otherexpenses'].aggregate(Sum('amount'))['amount__sum'] or 0
+        context['all_amount'] = context['data'].aggregate(Sum('all_amount'))['all_amount__sum']
+        context['jami_xarajat_amount'] = context['all_amount'] + context['jami_otherexpenses']
+        return context
+
+    def to_excel(self):
+        import datetime as dt
+        self.queryset = BazarAllIncomeStock.objects.all().annotate(
+            all_amount=F('weight') * F('price')
+        ).order_by('-created_date')
+        try:
+            from_date = dt.datetime.strptime(self.request.GET.get('from_date'), '%Y-%m-%d') if self.request.GET.get(
+                'from_date') else None
+        except:
+            from_date = None
+        try:
+            to_date = dt.datetime.strptime(self.request.GET.get('to_date'), '%Y-%m-%d') if self.request.GET.get(
+                'to_date') else None
+        except:
+            to_date = None
+        if from_date:
+            self.queryset = self.queryset.filter(created_date__gte=from_date)
+        if to_date:
+            self.queryset = self.queryset.filter(created_date__lte=to_date)
+        print(from_date, to_date)
+
+        data = self.queryset
+        print(self.queryset, from_date, to_date)
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="chiqimlaar_{timezone.now().strftime("%d.%m.%Y")}.xls"'
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('chiqimlar Dehqon')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        columns = ['N', "Mijoz", "Mahsuloti", "Soni", "Massasi",
+                   "Narxi(1 kg)", "Jami summasi", "To'lov Sanasi"]
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        for obj in data:
+            row_num += 1
+            ws.write(row_num, 0, row_num, font_style)
+            ws.write(row_num, 1, obj.client.full_name, font_style)
+            ws.write(row_num, 2, obj.product.name, font_style)
+            ws.write(row_num, 3, obj.quantity, font_style)
+            ws.write(row_num, 4, obj.weight, font_style)
+            ws.write(row_num, 5, obj.price, font_style)
+            ws.write(row_num, 6, obj.all_amount, font_style)
+            ws.write(row_num, 7, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
+        ws2 = wb.add_sheet('Xarajatlar Boshqa')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        columns = ['N', "Maqsadi", "Miqdori", "To'lov Sanasi"]
+        for col_num in range(len(columns)):
+            ws2.write(row_num, col_num, columns[col_num], font_style)
+        font_style = xlwt.XFStyle()
+        for obj in Xarajat.objects.filter(choise='qushxona'):
+            row_num += 1
+            ws2.write(row_num, 0, row_num, font_style)
+            ws2.write(row_num, 1, obj.comment, font_style)
+            ws2.write(row_num, 2, obj.amount, font_style)
+            ws2.write(row_num, 3, obj.created_date.strftime("%d-%m-%Y %H:%M"), font_style)
+        wb.save(response)
+        return response
+
+
+class AdminQushxonaChiqimExcelView(AdminChiqimListView):
+    def get(self, request, *args, **kwargs):
+        return self.to_excel()
+
+
+class AdminBozorChiqimExcelView(AdminBozorChiqimListView):
+    def get(self, request, *args, **kwargs):
+        return self.to_excel()
 
 
 def adduserView(request):

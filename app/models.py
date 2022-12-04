@@ -140,6 +140,7 @@ class IncomeSotuvchi(models.Model):
                               verbose_name="Holati")
     source = models.CharField(max_length=125, verbose_name="Manba",
                               choices=BazarSource.choices, default=BazarSource.qushxona)
+
     class Meta:
         verbose_name = "Bozor sotuvchi sotib olgan mahsuloti"
         verbose_name_plural = "Bozor sotuvchilari sotib olgan mahsulolari"
@@ -218,7 +219,7 @@ class IncomeBazarOther(models.Model):
 
 class ExpenseSotuvchi(models.Model):
     income_sotuvchi = models.ForeignKey(IncomeSotuvchi, models.PROTECT, null=True, blank=True,
-                                        verbose_name="Sotuvchi chiqimi")
+                                        verbose_name="Sotuvchi chiqimi", related_name='tulovlar')
     amount = models.IntegerField(verbose_name="Miqdori")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Sana")
 
@@ -227,7 +228,7 @@ class ExpenseSotuvchi(models.Model):
         verbose_name_plural = "Bozor sotuvchilari to'lovlari"
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super(ExpenseSotuvchi, self).save(force_insert, force_update, using, update_fields)
         try:
@@ -238,9 +239,6 @@ class ExpenseSotuvchi(models.Model):
                 f'https://api.telegram.org/bot5262072872:AAFdCPS5Ah7fJV8Qyl-rIxcfw8otYDI6Sr0/sendMessage?chat_id=-1001610927804&text={text}')
         except Exception as e:
             print(e)
-
-
-
 
     def __str__(self):
         return f"{self.income_sotuvchi}  {self.amount}  {self.created_date}"
