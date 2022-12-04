@@ -1152,7 +1152,7 @@ class AdminBozorChiqimListView(ListView):
         for col_num in range(len(columns)):
             ws2.write(row_num, col_num, columns[col_num], font_style)
         font_style = xlwt.XFStyle()
-        for obj in Xarajat.objects.filter(choise='qushxona'):
+        for obj in Xarajat.objects.filter(choise='bozor'):
             row_num += 1
             ws2.write(row_num, 0, row_num, font_style)
             ws2.write(row_num, 1, obj.comment, font_style)
