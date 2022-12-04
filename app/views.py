@@ -1230,9 +1230,9 @@ def qarzView(request):
     return render(request, 'Qarzlar.html', {"data": data})
 
 
-@qushxona_only
 def otherexpenseView(request):
     if request.method == 'POST':
+        print(request.body)
         data = json.loads(request.body)
         comment = data['comment']
         amount = int(data['amount'])
