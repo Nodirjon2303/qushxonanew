@@ -25,7 +25,7 @@ class BozorBozorIncomeForm(ModelForm):
         self.fields['price'].label = 'Narxi(1 kg)'
 
         # updating client and product querysets
-        self.fields['client'].queryset = self.fields['client'].queryset.filter(role='client').order_by('full_name')
+        self.fields['client'].queryset = self.fields['client'].queryset.filter(role='sotuvchi').order_by('full_name')
         self.fields['product'].queryset = self.fields['product'].queryset.order_by('name')
 
         # styling fields
