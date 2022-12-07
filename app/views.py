@@ -331,7 +331,6 @@ def clientPaymentView(request):
 
 @qushxona_only
 def incomeDehqonView(request):
-
     products = ExpenseDehqon.objects.filter(status='progress').select_related('dehqon', 'product').order_by('id')
     data = []
     dehqons = [i['id'] for i in products.values('id')]
@@ -1585,6 +1584,7 @@ def bozorqarzView(request):
     all_expense_sotuvchi = ExpenseSotuvchi.objects.filter(
         income_sotuvchi_id__in=sotuvchilar.values_list('id', flat=True)).select_related('income_sotuvchi__sotuvchi')
     all_income_sotuvchi = IncomeSotuvchi.objects.filter(sotuvchi_id__in=sotuvchilar.values_list('id', flat=True))
+    jami_qarz = 0
     for i in sotuvchilar:
         incomes = [k for k in all_income_sotuvchi if k.sotuvchi_id == i.id]
         jamisumma = sum([j.weight * j.price for j in incomes])
@@ -1595,6 +1595,7 @@ def bozorqarzView(request):
             'id': i.id,
             'qarz': jamisumma - jamitulov
         })
+        jami_qarz += (jamisumma - jamitulov)
         sanoq += 1
     data = [i for i in data if i['qarz'] > 0]
 
@@ -1602,7 +1603,7 @@ def bozorqarzView(request):
         return i['qarz']
 
     data.sort(key=sort_function, reverse=True)
-    return render(request, 'bozorqarz.html', {'data': data})
+    return render(request, 'bozorqarz.html', {'data': data, 'jami_qarz': jami_qarz})
 
 
 def logoutView(request):
